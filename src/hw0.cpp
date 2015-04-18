@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
 
 	// print parsing =======================================================================
 	
-	if (syscalls.size()>0)
+/*	if (syscalls.size()>0)
 	{
 		//cout << syscalls.at(0).size();
 
@@ -235,15 +235,17 @@ int main(int argc, char* argv[])
 				{
 					syscalls.at(i).at(j).printc();
 					cout << "___";
-					cout << endl;
+				cout << endl;
 					//int y = 0;
 					//cout << endl;
 				}
 			}
 			cout <<endl;
 		}
-	}
+	}*/
 	// create char** ======================================================================
+if (syscalls.size()>0)
+{
 	for (int i=0; i<syscalls.size(); i++)
 	{
 		//char* arr[100];
@@ -294,14 +296,15 @@ int main(int argc, char* argv[])
 					arr[k] = (char* ) tempA.at(k).c_str();
 				}
 				cout << "!!" << endl;
-				for (int y=0; y<tempA.size(); y++)
-				{
-					cout << arr[y] << " | " ;
+				//for (int y=0; y<tempA.size(); y++)
+				//{
+					//cout << arr[y] << " | " ;
 
-				}
+				//}
 				cout << endl;
-				syscalls.at(i).at(j).reset(arr[0],arr);
-				for (int y =0; y<=tempA.size(); y++)
+				syscalls.at(i).at(j).set_copy ( tempA );
+				syscalls.at(i).at(j).reset(arr[0]);
+				/*for (int y =0; y<=tempA.size(); y++)
 				{
 					if ( ( syscalls.at(i).at(j).get_arr()[y])  == "NULL" )
 					{
@@ -311,18 +314,53 @@ int main(int argc, char* argv[])
 					{
 						cout << (syscalls.at(i).at(j).get_arr()[y]) << " | ";
 					}
-				}
+				}*/
+				
+				//char* b;
+				//arr = b;
 
 			}
+
+			//arr = NULL;
 			cout << endl;
 		}	
 	}	
-	
+}	
+// codes to test whats in char** arr[]================================================
+	/*if (syscalls.size() >0)
+	{
+}		
+		
+		for (int i=0; i <= syscalls.size()-1; i++)
+		{
+			if (syscalls.at(i).size() > 0)
+			{
+				for (int j=0; j <= syscalls.at(i).size()-1; j++)
+				{
+					cout <<"111" << endl;
+					for ( int y=0; y < 3; y++ )
+					{
+						if ( ( syscalls.at(i).at(j).get_arr()[y])  == NULL )
+						{
+							cout << "!" << " | ";	
+						}
+						else
+						{
+							cout << (syscalls.at(i).at(j).get_arr()[y]) << " | ";
+						}
+					}
+					cout << endl;
+				}
+			}
+		}
+	}*/
+
 	// executing ==========================================================================
 	
 	//bool e_or = false;
 	//bool e_and = true;
-	/*		
+if (syscalls.size()>0)
+{			
 	for (int i=0; i <= syscalls.size()-1; i++)
 	{
 		bool e_or = false;
@@ -330,13 +368,13 @@ int main(int argc, char* argv[])
 
 		for (int j=0; j <= syscalls.at(i).size()-1; j++)
 		{
-			cout << j << " <- " <<  syscalls.at(i).at(0).get_arr( ) << endl;
+			cout << j << " <- " <<  *(syscalls.at(i).at(0).get_arr( )) << endl;
 	
 			if ( j==0 )
 			{
 				// doing with the first one of each vector
 				// will ALWAYS run exec
-				cout << "the first one: " <<  syscalls.at(i).at(0).get_arr( ) << endl;
+				cout << "the first one: " <<  *(syscalls.at(i).at(0).get_arr( )) << endl;
 				if ( execute(syscalls.at(i).at(0).get_arr()) == true )
 				{
 					e_or = true;
@@ -422,8 +460,8 @@ int main(int argc, char* argv[])
 
 			
 		}
-	}*/
-
+	}
+}
 	// codes to test whats in char** arr[]================================================
 	/*if (syscalls.size() >0)
 	{

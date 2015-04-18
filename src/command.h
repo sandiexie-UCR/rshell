@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
 using namespace std;
 
 class command
@@ -9,8 +10,10 @@ class command
 		bool next;
 		char sperator;
 		char* arg[100] = { NULL };
+		vector<string> copy;
 	public:
-		void reset(char*, char* []);
+		void set_copy( vector<string> );
+		void reset(char*);
 		command();
 		command(string,char);
 		void set_next(bool);
@@ -22,6 +25,14 @@ class command
 		char** get_arr();
 };
 
+void command :: set_copy( vector<string> a )
+{
+	for (int e=0; e < a.size(); e++ )
+	{
+		copy.push_back(a.at(e));
+	}
+}
+	
 char** command :: get_arr()
 {
 	return arg;
@@ -31,15 +42,13 @@ char command :: get_sperator()
 {
 	return sperator;
 }
-void command :: reset(char* C, char* aa[])
+void command :: reset(char* C)
 {
-	int t = 0;
-
-	while (aa[t] != NULL)
+	for (int t=0; t<copy.size(); t++)
 	{
-		arg[t] = aa[t];
-		t++;
+		arg[t] = (char*) copy.at(t).c_str() ;
 	}
+	
 	call = C;	
 }
 
