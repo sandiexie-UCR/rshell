@@ -8,7 +8,7 @@ class command
 		string call;
 		bool next;
 		char sperator;
-		char* arg[100];
+		char* arg[100] = { NULL };
 	public:
 		void reset(char*, char* []);
 		command();

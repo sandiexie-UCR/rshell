@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 		inner.clear();
 	}
 	
-	cout << syscalls.size()<<endl;
+	//cout << syscalls.size()<<endl;
 
 	cout << "sperate by ; success" <<endl;
 	
@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 	
 	if (syscalls.size()>0)
 	{
-		cout << syscalls.at(0).size();
+		//cout << syscalls.at(0).size();
 
 		for(int i=0; i <= syscalls.size()-1; i++)
 		{	
@@ -249,7 +249,8 @@ int main(int argc, char* argv[])
 		//char* arr[100];
 		for (int j=0; j<syscalls.at(i).size(); j++)
 		{
-			
+			cout << "size: " << syscalls.at(i).size() <<endl;
+			cout << "at: " << j << endl;
 			cout << "**" << endl;
 			vector<string> tempA;
 		
@@ -277,37 +278,32 @@ int main(int argc, char* argv[])
 				}
 			}
 				
-			//syscalls.at(i).at(j+1).printc();
-			//cout << "printed the second value"<<endl;
-			//////////////  zhe shi dui de
-			
 			cout << tempA.size();
 			if (tempA.size() > 0)
 			{
-				char* arr[tempA.size()+1];
+				int arr_size = tempA.size()+1;
+				char* arr[arr_size];
 
+				for (int q=0; q<arr_size; q++)
+				{	
+					arr[q] = NULL ;
+				}
+			
 				for (int k=0; k<= tempA.size()-1;k++)
 				{
 					arr[k] = (char* ) tempA.at(k).c_str();
 				}
 				cout << "!!" << endl;
-				arr [tempA.size()] = NULL;
-			
-			//syscalls.at(i).at(j).reset(arr[0], arr);
 				for (int y=0; y<tempA.size(); y++)
 				{
 					cout << arr[y] << " | " ;
 
 				}
-			//syscalls.at(i).at(j+1).printc();	
-			///cout << "printed the second value"<<endl;
-				
+				cout << endl;
 				syscalls.at(i).at(j).reset(arr[0],arr);
-				//syscalls.at(i).at(j+1).printc();
-				//cout << "printed the second value"<<endl;
 				for (int y =0; y<=tempA.size(); y++)
 				{
-					if ( ( syscalls.at(i).at(j).get_arr()[y])  == NULL )
+					if ( ( syscalls.at(i).at(j).get_arr()[y])  == "NULL" )
 					{
 						cout << "!" << " | ";	
 					}
@@ -319,23 +315,114 @@ int main(int argc, char* argv[])
 
 			}
 			cout << endl;
-						
-			//delete whole_cell;
-			//delete command1;
-			//tempA.clear();
 		}	
 	}	
 	
 	// executing ==========================================================================
 	
+	//bool e_or = false;
+	//bool e_and = true;
+	/*		
 	for (int i=0; i <= syscalls.size()-1; i++)
 	{
+		bool e_or = false;
+		bool e_and = true;
+
 		for (int j=0; j <= syscalls.at(i).size()-1; j++)
 		{
-			bool e_or = false;
-			bool e_and = true;
+			cout << j << " <- " <<  syscalls.at(i).at(0).get_arr( ) << endl;
+	
+			if ( j==0 )
+			{
+				// doing with the first one of each vector
+				// will ALWAYS run exec
+				cout << "the first one: " <<  syscalls.at(i).at(0).get_arr( ) << endl;
+				if ( execute(syscalls.at(i).at(0).get_arr()) == true )
+				{
+					e_or = true;
+					e_and = true;
+				}
+				else
+				{
+					e_or = false;
+					e_and = false;
+				}
+			}
+			//-------------------------------------------------------------
+			//============================================================
+			else
+			{
+				// not the first one
+				if ( syscalls.at(i).at(j-1).get_sperator() == '&')
+				{
+					// if following a &&
+					if ( e_and == true )
+					{
+						if ( execute(syscalls.at(i).at(j).get_arr()) == true )
+						{
+							e_and = true;
+						}
+						else
+						{
+							e_and = false;
+						}	
+					}
+					else
+					{
+						// do nothing
+					}
+
+					//----------------------------------------------
+
+					if (  syscalls.at(i).at(j).get_sperator() == '|' )
+					{
+						e_or = e_and;
+					}
+					else
+					{
+						// do nothing
+					}
+
+				}
+			//==============================================================
+				else if ( syscalls.at(i).at(j-1).get_sperator() == '|')
+				{
+					// if following a ||
+					if ( e_or == false )
+					{
+						if ( execute(syscalls.at(i).at(j).get_arr()) == true ) 
+						{	
+							e_or = true;
+						}
+						else
+						{
+							e_or = false;
+						}
+					}
+					else if ( e_or == true)
+					{
+						// do nothing
+					}
+
+					
+					//-----------------------------------------------
+
+					if ( syscalls.at(i).at(j).get_sperator() == '&' )
+					{
+						e_and = e_or ;
+					}
+					else
+					{
+						// do nothing
+					}
+				}
+			}
+			
+
+
+			
 		}
-	}
+	}*/
 
 	// codes to test whats in char** arr[]================================================
 	/*if (syscalls.size() >0)
