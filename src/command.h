@@ -9,11 +9,11 @@ class command
 		string call;
 		bool next;
 		char sperator;
-		char* arg[100] = { NULL };
+		char* arg[100];
 		vector<string> copy;
 	public:
 		void set_copy( vector<string> );
-		void reset(char*);
+		void reset();
 		command();
 		command(string,char);
 		void set_next(bool);
@@ -27,7 +27,7 @@ class command
 
 void command :: set_copy( vector<string> a )
 {
-	for (int e=0; e < a.size(); e++ )
+	for (unsigned int e=0; e < a.size(); e++ )
 	{
 		copy.push_back(a.at(e));
 	}
@@ -42,14 +42,19 @@ char command :: get_sperator()
 {
 	return sperator;
 }
-void command :: reset(char* C)
+void command :: reset()
 {
-	for (int t=0; t<copy.size(); t++)
+	unsigned int keep;
+	for (unsigned int t=0; t<copy.size(); t++)
 	{
 		arg[t] = (char*) copy.at(t).c_str() ;
+		keep = t;
 	}
-	
-	call = C;	
+
+
+	arg[keep+1] = NULL;	
+		
+	call = copy.at(0);	
 }
 
 command :: command ()
