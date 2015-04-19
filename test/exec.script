@@ -1,69 +1,178 @@
-Script started on Sat 18 Apr 2015 09:13:47 PM PDT
-]0;sandie@Desktop: ~/Desktop/hw0/rshell/testsandie@Desktop:~/Desktop/hw0/rshell/test$ cd ..
-]0;sandie@Desktop: ~/Desktop/hw0/rshellsandie@Desktop:~/Desktop/hw0/rshell$ make
-mkdir -p ./bin
-g++ -ansi -pedantic -Wall -Werror ./src/hw0.cpp -o ./bin/rshell
-]0;sandie@Desktop: ~/Desktop/hw0/rshellsandie@Desktop:~/Desktop/hw0/rshell$ bin/rshell
-getlogin: No such file or directory
-^C
-]0;sandie@Desktop: ~/Desktop/hw0/rshellsandie@Desktop:~/Desktop/hw0/rshell$ bin/rshell[6Pmake
-mkdir -p ./bin
-g++ -ansi -pedantic -Wall -Werror ./src/hw0.cpp -o ./bin/rshell
-]0;sandie@Desktop: ~/Desktop/hw0/rshellsandie@Desktop:~/Desktop/hw0/rshell$ makebin/rshell[6Pmakebin/rshell
-getlogin: No such file or directory
-^C
-]0;sandie@Desktop: ~/Desktop/hw0/rshellsandie@Desktop:~/Desktop/hw0/rshell$ git push exec[K[K[K[Korigin exec
-Username for 'https://github.com': zxie003@ucr.edu
-Password for 'https://zxie003@ucr.edu@github.com': 
-Counting objects: 29, done.
-Delta compression using up to 4 threads.
-Compressing objects:   4% (1/25)   Compressing objects:   8% (2/25)   Compressing objects:  12% (3/25)   Compressing objects:  16% (4/25)   Compressing objects:  20% (5/25)   Compressing objects:  24% (6/25)   Compressing objects:  28% (7/25)   Compressing objects:  32% (8/25)   Compressing objects:  36% (9/25)   Compressing objects:  40% (10/25)   Compressing objects:  44% (11/25)   Compressing objects:  48% (12/25)   Compressing objects:  52% (13/25)   Compressing objects:  56% (14/25)   Compressing objects:  60% (15/25)   Compressing objects:  64% (16/25)   Compressing objects:  68% (17/25)   Compressing objects:  72% (18/25)   Compressing objects:  76% (19/25)   Compressing objects:  80% (20/25)   Compressing objects:  84% (21/25)   Compressing objects:  88% (22/25)   Compressing objects:  92% (23/25)   Compressing objects:  96% (24/25)   Compressing objects: 100% (25/25)   Compressing objects: 100% (25/25), done.
-Writing objects:   3% (1/29)   Writing objects:   6% (2/29)   Writing objects:  10% (3/29)   Writing objects:  13% (4/29)   Writing objects:  17% (5/29)   Writing objects:  20% (6/29)   Writing objects:  24% (7/29)   Writing objects:  27% (8/29)   Writing objects:  31% (9/29)   Writing objects:  34% (10/29)   Writing objects:  41% (12/29)   Writing objects:  44% (13/29)   Writing objects:  48% (14/29)   Writing objects:  51% (15/29)   Writing objects:  55% (16/29)   Writing objects:  58% (17/29)   Writing objects:  62% (18/29)   Writing objects:  65% (19/29)   Writing objects:  68% (20/29)   Writing objects:  72% (21/29)   Writing objects:  75% (22/29)   Writing objects:  79% (23/29)   Writing objects:  82% (24/29)   Writing objects:  86% (25/29)   Writing objects:  89% (26/29)   Writing objects:  93% (27/29)   Writing objects:  96% (28/29)   Writing objects: 100% (29/29)   Writing objects: 100% (29/29), 6.15 KiB | 0 bytes/s, done.
-Total 29 (delta 8), reused 0 (delta 0)
-To https://github.com/sandiexie/rshell.git
- * [new branch]      exec -> exec
-]0;sandie@Desktop: ~/Desktop/hw0/rshellsandie@Desktop:~/Desktop/hw0/rshell$ shh [K[K[K[Kssh zxie@ucr.edu[K[K[K[K[K[K[Khammer.ucr.[K[K[K[Kcs.ucr.edu
-zxie@hammer.cs.ucr.edu's password: 
-Permission denied, please try again.
-zxie@hammer.cs.ucr.edu's password: 
-Permission denied, please try again.
-zxie@hammer.cs.ucr.edu's password: 
-
-]0;sandie@Desktop: ~/Desktop/hw0/rshellsandie@Desktop:~/Desktop/hw0/rshell$ ssh zxie@hammer.cs.ucr.edu[6Pgit push origin execssh zxie@hammer.cs.ucr.edu0@hammer.cs.ucr.edu0@hammer.cs.ucr.edu3@hammer.cs.ucr.edu
-zxie003@hammer.cs.ucr.edu's password: 
-Last login: Thu Apr 16 02:23:08 2015 from 75-142-207-47.static.rvsd.ca.charter.com
+Script started on Sat 18 Apr 2015 09:57:02 PM PDT
 ~
-zxie003@hammer $ cs100
-[0;91m
-===============================================================================
-|                                                                             |
-| You have enabled settings specific for cs100.  Everything you do is being   |
-| recorded to measure your progress in the class.                             |
-|                                                                             |
-| Important commands for the class:                                           |
-|   * calcgrade.sh          displays a detailed breakdown of your grade       |
-|   * typespeed             practice typing unix commands                     |
-|                                                                             |
-| Important commands for general C++ programming:                             |
-|   * make                  don't call g++ manually; let make do the work!    |
-|   * gdb                   the GNU debugger                                  |
-|   * valgrind              get rid of your memory leaks                      |
-|   * cppcheck              static analysis tool                              |
-|   * man                   find help about any syscall / terminal command    |
-|                                                                             |
-===============================================================================
-[0m
-[s%%%%%%%%%%[u[0;32mzxie003[0;36m@[0;32mcs100[0;36m:[0;32m~[0;95m [0;36m$[0m ls
-alice  Desktop	  Downloads	lab2_ex2.cpp  Music    Pictures  Templates  Videos
-CS10   Documents  lab2_ex1.cpp	lab2_ex3.cpp  new.txt  Public	 ucr-cs100  WINDOWS
-[s%%%%%%%%%%[u[0;32mzxie003[0;36m@[0;32mcs100[0;36m:[0;32m~[0;95m [0;36m$[0m git pull[K[K[K[Kclone https://github.com/sandiexie/rshell
-Cloning into 'rshell'...
-remote: Counting objects: 29, done.[K
-remote: Compressing objects:   5% (1/17)   [Kremote: Compressing objects:  11% (2/17)   [Kremote: Compressing objects:  17% (3/17)   [Kremote: Compressing objects:  23% (4/17)   [Kremote: Compressing objects:  29% (5/17)   [Kremote: Compressing objects:  35% (6/17)   [Kremote: Compressing objects:  41% (7/17)   [Kremote: Compressing objects:  47% (8/17)   [Kremote: Compressing objects:  52% (9/17)   [Kremote: Compressing objects:  58% (10/17)   [Kremote: Compressing objects:  64% (11/17)   [Kremote: Compressing objects:  70% (12/17)   [Kremote: Compressing objects:  76% (13/17)   [Kremote: Compressing objects:  82% (14/17)   [Kremote: Compressing objects:  88% (15/17)   [Kremote: Compressing objects:  94% (16/17)   [Kremote: Compressing objects: 100% (17/17)   [Kremote: Compressing objects: 100% (17/17), done.[K
-remote: Total 29 (delta 8), reused 29 (delta 8), pack-reused 0[K
-Unpacking objects:   3% (1/29)   Unpacking objects:   6% (2/29)   Unpacking objects:  10% (3/29)   Unpacking objects:  13% (4/29)   Unpacking objects:  17% (5/29)   Unpacking objects:  20% (6/29)   Unpacking objects:  24% (7/29)   Unpacking objects:  27% (8/29)   Unpacking objects:  31% (9/29)   Unpacking objects:  34% (10/29)   Unpacking objects:  37% (11/29)   Unpacking objects:  41% (12/29)   Unpacking objects:  44% (13/29)   Unpacking objects:  48% (14/29)   Unpacking objects:  51% (15/29)   Unpacking objects:  55% (16/29)   Unpacking objects:  58% (17/29)   Unpacking objects:  62% (18/29)   Unpacking objects:  65% (19/29)   Unpacking objects:  68% (20/29)   Unpacking objects:  72% (21/29)   Unpacking objects:  75% (22/29)   Unpacking objects:  79% (23/29)   Unpacking objects:  82% (24/29)   Unpacking objects:  86% (25/29)   Unpacking objects:  89% (26/29)   Unpacking objects:  93% (27/29)   Unpacking objects:  96% (28/29)   Unpacking objects: 100% (29/29)   Unpacking objects: 100% (29/29), done.
-Checking connectivity... done
-[s%%%%%%%%%%[u[0;32mzxie003[0;36m@[0;32mcs100[0;36m:[0;32m~[0;95m [0;36m$[0m ls
-alice  Desktop	  Downloads	lab2_ex2.cpp  Music    Pictures  rshell     ucr-cs100  WINDOWS
-CS10   Documents  lab2_ex1.cpp	lab2_ex3.cpp  new.txt  Public	 Templates  Videos
-[s%%%%%%%%%%[u[0;32mzxie003[0;36m@[0;32mcs100
+zxie003@hammer $ exitbin/rshell[6Pmake[2Plscd rshell/ls[Kvim README.md ls[Kvim README.md ls[Kcd rshell/ls[Kmake[2Plscd rshell/ls[Kvim README.md [1Pcd[C[C[C[C[C[C[C[C[C[C[Cls[Kcd hw0-rshell/ls[Kcd hw0-rshell/ls[Kcd hw0-rshell/
+bash: cd: hw0-rshell/: No such file or directory
+~
+zxie003@hammer $ ls
+[0m[01;34malice[0m/    [01;34mDocuments[0m/     [01;32mlab2_ex2.cpp[0m*  new.txt    [01;34mrshell[0m/     [01;34mVideos[0m/
+[01;34mCS10[0m/     [01;34mDownloads[0m/     [01;32mlab2_ex3.cpp[0m*  [01;34mPictures[0m/  [01;34mTemplates[0m/  [01;34mWINDOWS[0m/
+[01;34mDesktop[0m/  [01;32mlab2_ex1.cpp[0m*  [01;34mMusic[0m/         [01;34mPublic[0m/    [01;34mucr-cs100[0m/
+[m~
+zxie003@hammer $ cd rshell/
+~/rshell
+zxie003@hammer $ ls
+[0m[01;34mbin[0m/  Makefile  README.md  [01;34msrc[0m/  [01;34mtest[0m/
+[m~/rshell
+zxie003@hammer $ cd[K[Kmake
+mkdir -p ./bin
+g++ -ansi -pedantic -Wall -Werror ./src/hw0.cpp -o ./bin/rshell
+~/rshell
+zxie003@hammer $ bin/rshell
+zxie003@hammer.cs.ucr.edu:$ls
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls -a;
+.  ..  bin  .git  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls -l
+total 20
+drwx------ 2 zxie003 classes 4096 Apr 18 21:55 bin
+-rw------- 1 zxie003 classes  267 Apr 18 21:19 Makefile
+-rw------- 1 zxie003 classes 1402 Apr 18 21:24 README.md
+drwx------ 2 zxie003 classes 4096 Apr 18 21:19 src
+drwx------ 2 zxie003 classes 4096 Apr 18 21:51 test
+zxie003@hammer.cs.ucr.edu:$ls -a -l;
+total 36
+drwx------  6 zxie003 classes 4096 Apr 18 21:31 .
+drwx------ 42 zxie003 classes 8192 Apr 18 21:47 ..
+drwx------  2 zxie003 classes 4096 Apr 18 21:55 bin
+drwx------  8 zxie003 classes 4096 Apr 18 21:24 .git
+-rw-------  1 zxie003 classes  267 Apr 18 21:19 Makefile
+-rw-------  1 zxie003 classes 1402 Apr 18 21:24 README.md
+drwx------  2 zxie003 classes 4096 Apr 18 21:19 src
+drwx------  2 zxie003 classes 4096 Apr 18 21:51 test
+zxie003@hammer.cs.ucr.edu:$ls -a -b -c -d -f -g -h -i -m-  -n -0 o;
+21510241 drwx------ 6 4.0K Apr 18 21:31 .
+zxie003@hammer.cs.ucr.edu:$/ bim n/rshell
+zxie003@hammer.cs.ucr.edu:$ps
+  PID TTY          TIME CMD
+20780 pts/38   00:00:00 bash
+21451 pts/38   00:00:00 rshell
+22797 pts/38   00:00:00 rshell
+22805 pts/38   00:00:00 ps
+zxie003@hammer.cs.ucr.edu:$exit
+zxie003@hammer.cs.ucr.edu:$ps
+  PID TTY          TIME CMD
+20780 pts/38   00:00:00 bash
+21451 pts/38   00:00:00 rshell
+22810 pts/38   00:00:00 ps
+zxie003@hammer.cs.ucr.edu:$ttt;
+exec: No such file or directory
+zxie003@hammer.cs.ucr.edu:$   ls  -a -l     ;
+total 36
+drwx------  6 zxie003 classes 4096 Apr 18 21:31 .
+drwx------ 42 zxie003 classes 8192 Apr 18 21:47 ..
+drwx------  2 zxie003 classes 4096 Apr 18 21:55 bin
+drwx------  8 zxie003 classes 4096 Apr 18 21:24 .git
+-rw-------  1 zxie003 classes  267 Apr 18 21:19 Makefile
+-rw-------  1 zxie003 classes 1402 Apr 18 21:24 README.md
+drwx------  2 zxie003 classes 4096 Apr 18 21:19 src
+drwx------  2 zxie003 classes 4096 Apr 18 21:51 test
+zxie003@hammer.cs.ucr.edu:$;;  ls;;;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$|| ls;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$&& ls;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls ||;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls &&;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$;;;
+zxie003@hammer.cs.ucr.edu:$&&
+zxie003@hammer.cs.ucr.edu:$||
+zxie003@hammer.cs.ucr.edu:$&&&
+exec: No such file or directory
+zxie003@hammer.cs.ucr.edu:$|||
+exec: No such file or directory
+zxie003@hammer.cs.ucr.edu:$ls && pwd;
+bin  Makefile  README.md  src  test
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls || pwd;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls && pwd && ps;
+bin  Makefile  README.md  src  test
+/class/classes/zxie003/rshell
+  PID TTY          TIME CMD
+20780 pts/38   00:00:00 bash
+21451 pts/38   00:00:00 rshell
+25707 pts/38   00:00:00 ps
+zxie003@hammer.cs.ucr.edu:$ls || pwd || ps;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ttt || ee || wd  || ls |||    ffe || efw ;
+exec: No such file or directory
+exec: No such file or directory
+exec: No such file or directory
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls||pwd;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls&&pwdl ;
+bin  Makefile  README.md  src  test
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$true || pwd;
+zxie003@hammer.cs.ucr.edu:$false || pwd;
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$pwd ||      true && pwd;
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$true || pwd;
+zxie003@hammer.cs.ucr.edu:$true || false && false && true || ls;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$true && ls || pwd;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$  echo hi || dwudha && ls;
+hi
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls -l ||    dhawudod ; ls||pwd;
+total 20
+drwx------ 2 zxie003 classes 4096 Apr 18 21:55 bin
+-rw------- 1 zxie003 classes  267 Apr 18 21:19 Makefile
+-rw------- 1 zxie003 classes 1402 Apr 18 21:24 README.md
+drwx------ 2 zxie003 classes 4096 Apr 18 21:19 src
+drwx------ 2 zxie003 classes 4096 Apr 18 21:51 test
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$exit
+~/rshell
+zxie003@hammer $ bin/rshell
+zxie003@hammer.cs.ucr.edu:$ls -l exit;
+ls: cannot access exit: No such file or directory
+zxie003@hammer.cs.ucr.edu:$^[[A    ls -l; exit
+total 20
+drwx------ 2 zxie003 classes 4096 Apr 18 21:55 bin
+-rw------- 1 zxie003 classes  267 Apr 18 21:19 Makefile
+-rw------- 1 zxie003 classes 1402 Apr 18 21:24 README.md
+drwx------ 2 zxie003 classes 4096 Apr 18 21:19 src
+drwx------ 2 zxie003 classes 4096 Apr 18 21:51 test
+~/rshell
+zxie003@hammer $ danjd[K[K[K[K[Kbin/rshell
+zxie003@hammer.cs.ucr.edu:$dwajduw exit
+exec: No such file or directory
+zxie003@hammer.cs.ucr.edu:$ls -l #dwdjdo;
+total 20
+drwx------ 2 zxie003 classes 4096 Apr 18 21:55 bin
+-rw------- 1 zxie003 classes  267 Apr 18 21:19 Makefile
+-rw------- 1 zxie003 classes 1402 Apr 18 21:24 README.md
+drwx------ 2 zxie003 classes 4096 Apr 18 21:19 src
+drwx------ 2 zxie003 classes 4096 Apr 18 21:51 test
+zxie003@hammer.cs.ucr.edu:$ls -l#djwdo;
+total 20
+drwx------ 2 zxie003 classes 4096 Apr 18 21:55 bin
+-rw------- 1 zxie003 classes  267 Apr 18 21:19 Makefile
+-rw------- 1 zxie003 classes 1402 Apr 18 21:24 README.md
+drwx------ 2 zxie003 classes 4096 Apr 18 21:19 src
+drwx------ 2 zxie003 classes 4096 Apr 18 21:51 test
+zxie003@hammer.cs.ucr.edu:$#ls -dwhdo;
+exec: No such file or directory
+zxie003@hammer.cs.ucr.edu:$a ls #-l;
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ps  touch es;
+zxie003@hammer.cs.ucr.edu:$ls
+bin  es  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$re   m es
+zxie003@hammer.cs.ucr.edu:$ls
+bin  Makefile  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$exit
+~/rshell
+zxie003@hammer $ exit
+exit
+
+Script done on Sat 18 Apr 2015 10:43:10 PM PDT
