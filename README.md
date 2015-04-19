@@ -31,4 +31,4 @@ to exit the program, simply type `exit` as a command.
 #Bugs
 1. quotation marks will not work as expected.for example `echo "hi" ` will output `"hi"`.
 2. spaces and tab by itself wont be ignored. and be run as error command.
-
+3. comment by is self will report as error command.
