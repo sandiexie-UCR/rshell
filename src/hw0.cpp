@@ -222,8 +222,8 @@ int main(int argc, char* argv[])
 
 
 	// print parsing =======================================================================
-	
-/*	if (syscalls.size()>0)
+	cout << "size1: " << syscalls.size() << endl;
+	if (syscalls.size()>0)
 	{
 		//cout << syscalls.at(0).size();
 
@@ -231,6 +231,7 @@ int main(int argc, char* argv[])
 		{	
 			if (syscalls.at(i).size() >0)
 			{
+				cout << "size2: " << syscalls.at(i).size()<<endl;
 				for (int j=0; j<=syscalls.at(i).size()-1; j++)
 				{
 					syscalls.at(i).at(j).printc();
@@ -242,13 +243,16 @@ int main(int argc, char* argv[])
 			}
 			cout <<endl;
 		}
-	}*/
+	}
 	// create char** ======================================================================
 if (syscalls.size()>0)
 {
 	for (int i=0; i<syscalls.size(); i++)
 	{
 		//char* arr[100];
+		if ( syscalls.at(i).size() > 0 )
+		{
+
 		for (int j=0; j<syscalls.at(i).size(); j++)
 		{
 			cout << "size: " << syscalls.at(i).size() <<endl;
@@ -323,6 +327,8 @@ if (syscalls.size()>0)
 
 			//arr = NULL;
 			cout << endl;
+		}
+	
 		}	
 	}	
 }	
@@ -365,7 +371,9 @@ if (syscalls.size()>0)
 	{
 		bool e_or = false;
 		bool e_and = true;
-
+		
+		if (syscalls.at(i).size() >0)
+		{
 		for (int j=0; j <= syscalls.at(i).size()-1; j++)
 		{
 			cout << j << " <- " <<  *(syscalls.at(i).at(0).get_arr( )) << endl;
@@ -459,6 +467,7 @@ if (syscalls.size()>0)
 
 
 			
+		}
 		}
 	}
 }
