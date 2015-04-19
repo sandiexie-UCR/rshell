@@ -13,10 +13,13 @@ to exit the program, simply type `exit` as a command.
 
 
 ##EDGE CASES:
-	1. seperator comes in pair: having `&&&` will consider having a seperator `&&` and a command `&`, which will return false. the same apply for `|||`.
+	1. seperator comes in pair: having `&&&` will consider having a seperator `&&` and a 
+	   command `&`, which will return false. the same apply for `|||`.
 	2. however, having `;;;` will means nothing, and the program does nothing.
-	3. having single command with connector, for example `&& ls;`, the command ls will be executed, so as in the case of `ls &&;`. the same apply to seperator `||`.
-	4. however, having a space before or after the connector will result in false, such as `  && ls;` or `ls &&    ;`.  
+	3. having single command with connector, for example `&& ls;`, the command ls will be 
+	   executed, so as in the case of `ls &&;`. the same apply to seperator `||`.
+	4. however, having a space before or after the connector will result in false, such 
+	   as `  && ls;` or `ls &&    ;`.  
 
 #How to run rshell
 
