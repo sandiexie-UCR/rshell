@@ -168,7 +168,7 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 			else
 				cout << '-';
 
-			cout << " ";
+			//cout << " ";
 
 			struct passwd* name;
 			struct group* group;
@@ -193,7 +193,7 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 			cout << " " << name_s;
 			cout << " " << group_s;
 
-			cout.width(6);
+			cout.width(7);
 			cout << right << f1.st_size;
 			cout << " " << time << " ";
 			cout <<filenames.at(i) << endl;
@@ -201,6 +201,62 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 	}
 
 }
+
+
+void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir)
+{
+	for (int i =0; i < filesforR.size(); i++)
+	{
+		// loop each files
+		string path = curr_dir + '/' + filesforR.at(i);
+
+		struct stat f1;
+		stat(path.c_str(), &f1);
+
+		if(S_ISDIR(f1.st_mode))
+		{
+			// is dir
+			// get new vector of files
+			// recursive
+			vector<string> innerfiles;
+			DIR *open_innerdir = opendir((char*) filesforR.at(i).c_str());
+
+			if (open_innerdir == NULL)
+			{
+				perror("opening does not exist directory.");
+				exit(1);
+			}
+
+			dirent *b;
+
+			while ( (b = readdir(open_innerdir)) )
+			{
+				if (b == NULL)
+				{
+					perror ("read directory fail.");
+					exit(1);
+				}
+
+				string c = b->d_name;
+				innerfiles.push_back(c);
+			}
+
+			do_R (aaa,lll,innerfiles,filesforR.at(i));
+		}
+		else
+		{
+			// do nothing
+		}
+	}
+
+	// after checking print content
+	
+	print_file(aaa,lll,filesforR,curr_dir );
+	return;
+}
+
+
+
 
 int main (int argc, char * argv[])
 {
@@ -260,12 +316,19 @@ int main (int argc, char * argv[])
 		// finish getting files from directory----------------------------------------
 
 
-		for (int y =0; y<files.size();y++)
-		{
-			cout << files.at(y)<< endl;
-		}
+		//for (int y =0; y<files.size();y++)
+		//{
+		//	cout << files.at(y)<< endl;
+		//}
 
-		print_file (has_a, has_l, files, directory.at(i));
+		if (!has_R)
+		{
+			print_file (has_a, has_l, files, directory.at(i));
+		}
+		else
+		{
+			do_R ( has_a, has_l, files, directory.at(i));
+		}
 	}
 	return 0;
 }
