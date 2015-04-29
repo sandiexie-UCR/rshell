@@ -103,14 +103,14 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 		{
 			string path = dir + '/' + filenames.at(i);
 
-			cout << "::" << endl;
+			//cout << "::" << endl;
 			struct stat f1;
 			stat(path.c_str(), &f1);
-			cout << "!!";	
+			//cout << "!!";	
 			// access part:
 			if (S_ISDIR(f1.st_mode))
 			{
-				cout << "rrrr";
+				//cout << "rrrr";
 				cout << 'd';
 			}
 			else if (S_ISLNK(f1.st_mode))
@@ -192,8 +192,11 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 			cout.width(2); cout << right << f1.st_nlink;
 			cout << " " << name_s;
 			cout << " " << group_s;
-			cout << " " << f1.st_size << " " << time << " ";
 
+			cout.width(6);
+			cout << right << f1.st_size;
+			cout << " " << time << " ";
+			cout <<filenames.at(i) << endl;
 		}
 	}
 
