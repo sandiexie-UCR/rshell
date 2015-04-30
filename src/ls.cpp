@@ -16,6 +16,10 @@
 
 using namespace std;
 
+char blue[] = {"\033[1;34m"};
+char white[] = {"\033[0;00m"};
+char green[] = {"\033[1;32m"};
+
 
 void case_dash(bool& aa, bool& ll, bool& RR, bool& gg, char* word)
 {
@@ -42,7 +46,7 @@ void case_dash(bool& aa, bool& ll, bool& RR, bool& gg, char* word)
 	}
 }
 
-void get_directory (bool& a, bool& l, bool& R, bool& g, vector<string>& d, char* arg[], int num)
+void get_directory (bool& a, bool& l, bool& R, bool& g, vector<string>& d, char* arg[], size_t num)
 {
 	for (unsigned int i=1; i < num; i++)
 	{
@@ -71,42 +75,61 @@ void sort_dir (vector<string>& f)
 	sort(f.begin(), f.end(), comparedir);
 }
 
-void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
+void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir, bool first)
 {
+	//cout << endl;
+	cout << dir << ": " << endl;
 	if (!do_all)
 	{
 		//fix vector is it is not a
-		while( filenames.at(0).at(0) == '.' )
-		{
-			filenames.erase(filenames.begin());
-		}
+			while( filenames.size()>0 && filenames.at(0).at(0) == '.' )
+			{
+				filenames.erase(filenames.begin());
+			}	
 	}
 	
+	//cout << "!!!!" << endl;	
+	//cout <<"size: " << filenames.size() << endl;
 	if (! do_l )
 	{
 		// just print names
 		for (unsigned int i =0; i < filenames.size();i++)
 		{
-			char *width = (char*)malloc(BUFSIZ);
+			//string width = (char*)malloc(BUFSIZ);
 
-			strcat (width,(char*) filenames.at(i).c_str());
-
-			cout << filenames.at(i) << "  ";
+			//strcat ((char*)width.c_str(), (char*) filenames.at(i).c_str());
+			
+			string path = dir + '/' + filenames.at(i);
+			struct stat ss;
+			stat(path.c_str(), &ss);
+			
+			if (S_ISDIR(ss.st_mode))
+			{
+				cout << blue << filenames.at(i) << white << "  ";
+			}
+			else if (S_IXUSR & ss.st_mode)
+			{
+				cout << green << filenames.at(i) << white << " ";
+			}
+			else
+			{
+				cout << filenames.at(i) <<  " " ;
+			}
 		}
 	}
 	else
 	{
-		cout << "here"<< endl;
+		//cout << "here"<< endl;
 		//do l
 		//print infos
 		for (unsigned int i=0; i<filenames.size();i++)
 		{
-			string path = dir + '/' + filenames.at(i);
+			string path;
+			path = dir + '/' + filenames.at(i);
 
-			//cout << "::" << endl;
 			struct stat f1;
 			stat(path.c_str(), &f1);
-			//cout << "!!";	
+			//cout << "1" << endl;	
 			// access part:
 			if (S_ISDIR(f1.st_mode))
 			{
@@ -117,11 +140,12 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 			{
 				cout << 's';
 			}
+			//cout << "3" << endl;
 			else
 			{
 				cout << '-';
 			}
-
+			//cout << "2" << endl;
 			//check for each one:
 			if (f1.st_mode & S_IRUSR)
 				cout << 'r';
@@ -169,26 +193,41 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 				cout << '-';
 
 			//cout << " ";
-
+			//cout <<  " 11 " << endl;
 			struct passwd* name;
 			struct group* group;
-
+			
 			string name_s;
 			string group_s;
-
-			string new1 = dir + '/' + filenames.at(i);
+			//cout << "22" << endl;
+			//string new1 = dir + '/' + filenames.at(i);
 			
 			name = getpwuid(f1.st_uid);
+			if(name == NULL)
+				perror("name");
+
+			//struct stat f2;
+			//stat(filenames.at(i).c_str(), &f2);
+			
 
 			group = getgrgid(f1.st_gid);
-			
-			name_s = name->pw_name;
-			group_s = group->gr_name;
+			if (group == NULL)
+			{
+				group_s = group -> gr_name; 
+			}
+				//perror("group");
 
+
+			//cout << "33" << endl;
+			name_s = name -> pw_name;
+			group_s = group -> gr_name;
+
+			//cout << "44" << endl;
 			string time;
 			time = ctime(&f1.st_mtime);
 			time = time.substr(4,12);
 
+			//cout << "55" << endl;
 			cout.width(2); cout << right << f1.st_nlink;
 			cout << " " << name_s;
 			cout << " " << group_s;
@@ -196,63 +235,166 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir)
 			cout.width(7);
 			cout << right << f1.st_size;
 			cout << " " << time << " ";
-			cout <<filenames.at(i) << endl;
+			cout <<filenames.at(i)<< endl;
+		
+			//struct stat ss;
+			//stat(filenames.at(i).c_str(), &ss);
+			
+			//if (S_ISDIR(f1.st_mode))
+			//{
+			//	cout << blue << filenames.at(i) << white << endl;
+			//}
+			//else if (S_IXUSR & f1.st_mode)
+			//{
+		//		cout << green << filenames.at(i) << white << endl;
+		//	}
+		//	else
+		//	{
+		//		cout << filenames.at(i) <<  endl;
+		//	}
+			
 		}
 	}
-
+	if (!do_l)
+	{
+		cout << endl;
+	}
+	cout << endl;
 }
 
 
-void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir)
+bool notcontain_slash (string a)
 {
-	for (int i =0; i < filesforR.size(); i++)
+	int found = -1;
+	found =  a.find("/");
+	if (found > 0)
 	{
-		// loop each files
-		string path = curr_dir + '/' + filesforR.at(i);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
 
-		struct stat f1;
-		stat(path.c_str(), &f1);
+bool contain_dotdot (string a)
+{
+	int found = -1;
+	found =  a.find("..");
+	if (found >= 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
-		if(S_ISDIR(f1.st_mode))
+
+void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool first)
+{
+	vector < vector<string> > needrecur;
+	vector <string> needname;
+
+	bool dot = false;
+
+	int do_from =0;
+	
+	for (int y =0; y < filesforR.size();y++)
+	{
+		if (filesforR.at(y).at(0) == '.')
 		{
-			// is dir
-			// get new vector of files
-			// recursive
-			vector<string> innerfiles;
-			DIR *open_innerdir = opendir((char*) filesforR.at(i).c_str());
-
-			if (open_innerdir == NULL)
-			{
-				perror("opening does not exist directory.");
-				exit(1);
-			}
-
-			dirent *b;
-
-			while ( (b = readdir(open_innerdir)) )
-			{
-				if (b == NULL)
-				{
-					perror ("read directory fail.");
-					exit(1);
-				}
-
-				string c = b->d_name;
-				innerfiles.push_back(c);
-			}
-
-			do_R (aaa,lll,innerfiles,filesforR.at(i));
-		}
-		else
-		{
-			// do nothing
+			do_from ++;
 		}
 	}
+	
+	for (unsigned int i = do_from; i < filesforR.size(); i++)
+	{
+		//cout << filesforR.at(i) << "contain slash? " << notcontain_slash(filesforR.at(i))<<endl;
 
+		if (1)
+		{
+			string path;
+			// loop each files
+			path = curr_dir + '/' + filesforR.at(i);
+			//cout << path << "<-dirs"<<endl;
+
+			struct stat f2;
+			stat(path.c_str(), &f2);
+
+			vector<string> innerfiles;
+			DIR *open_innerdir = opendir((char*) path.c_str());
+		
+			if(S_ISDIR(f2.st_mode))
+			{
+				//cout <<  path << "this is dirs!!!!!!"<< endl;
+				if (open_innerdir != NULL)
+				{
+				//	cout << "opened" << endl;
+				//cout << path << "dir name " << endl;
+				// is dir
+					dirent *b;
+
+					while ( (b = readdir(open_innerdir)) )
+					{
+						if (b == NULL)
+						{
+							perror ("read directory fail.");
+							exit(1);
+						}
+
+						string c = b->d_name;
+						innerfiles.push_back(c);
+						//needname.push_back(path);
+					}
+					
+					
+					if (closedir(open_innerdir) == -1)
+					{
+						perror ("close directory");
+					}
+	
+				}
+			}
+			else
+			{
+				// do nothing
+			}
+		
+			sort_dir(innerfiles);
+	
+			if (innerfiles.size()>0)
+			{
+				//cout << "did push_back" << endl;
+				needrecur.push_back(innerfiles);
+				needname.push_back (path);
+			}
+		
+		}
+				//dot =false;
+
+	}
 	// after checking print content
 	
-	print_file(aaa,lll,filesforR,curr_dir );
+	//string r = "";
+	
+	print_file(aaa,lll,filesforR,curr_dir,0 );
+
+	//bool notf = false;
+	//now do the innder dirs
+	for (unsigned int q =0; q < needrecur.size(); q++)
+	{
+		//for (int w=0; w<needrecur.at(q).size();w++)
+		//{
+		//	cout << needrecur.at(q).at(w) << endl;
+		//}
+		do_R (aaa, lll, needrecur.at(q),needname.at(q),0);
+	}
+	//cout << endl;
 	return;
+
+	
 }
 
 
@@ -269,20 +411,26 @@ int main (int argc, char * argv[])
 
 	get_directory(has_a, has_l,has_R,has_g, directory, argv, argc);
 
+	
 	if (!(!has_g))
 	{
 		perror ("non-flag exists in arguments.");
 		exit(1);
 	}
 
-	cout << "a: " << has_a << endl;
-	cout << "l: " << has_l << endl;
-	cout << "g: " << has_g << endl;
-	cout << "R: " << has_R << endl;	
+	//cout << "a: " << has_a << endl;
+	//cout << "l: " << has_l << endl;
+	//cout << "g: " << has_g << endl;
+	//cout << "R: " << has_R << endl;	
 	//cout << directory.at(0)<< endl;
 	//cout << directory.at(1);
 
-	for (int i = 0; i < directory.size(); i++)
+	if (directory.size() == 0)
+	{
+		directory.push_back(".");
+	}
+	
+	for (unsigned int i = 0; i < directory.size(); i++)
 	{
 		// loop for each directory
 
@@ -290,7 +438,7 @@ int main (int argc, char * argv[])
 			
 		DIR *opened_dir = opendir((char* ) directory.at(i).c_str());
 		
-		cout << "222" << endl;
+		//cout << "222" << endl;
 
 		if (opened_dir == NULL)
 		{
@@ -323,12 +471,20 @@ int main (int argc, char * argv[])
 
 		if (!has_R)
 		{
-			print_file (has_a, has_l, files, directory.at(i));
+			print_file (has_a, has_l, files, directory.at(i),0);
 		}
 		else
 		{
-			do_R ( has_a, has_l, files, directory.at(i));
+			bool yesf = true;
+			do_R ( has_a, has_l, files, directory.at(i), yesf);
+		}
+
+		if (closedir(opened_dir) == -1)
+		{
+			perror ("close directory");
 		}
 	}
+	
+	
 	return 0;
 }
