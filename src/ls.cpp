@@ -145,12 +145,12 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 		ioctl (STDOUT_FILENO, TIOCGWINSZ, &tersiz);
 		
 		cout <<  "size" << tersiz.ws_col <<endl;
-		int terminalsize = tersiz.ws_col ;
+		unsigned int terminalsize = tersiz.ws_col ;
 		
-		int maxsize = get_max_size (filenames) + 2;
+		unsigned int maxsize = get_max_size (filenames) + 2;
 		
 		//bool atmax = false;
-		int current_size = 0;
+		unsigned int current_size = 0;
 
 		// just print names
 		for (unsigned int i =0; i < filenames.size();i++)
@@ -179,7 +179,7 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 				if (filenames.at(i).at(0) == '.')
 				{
 					cout << gray << filenames.at(i) << white;
-					for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+					for (unsigned int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
 					{
 						cout << " ";
 					}
@@ -187,7 +187,7 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 				else
 				{
 					cout << blue << filenames.at(i) << white;
-					for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+					for (unsigned int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
 					{
 						cout << " ";
 					}
@@ -196,7 +196,7 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			else if (S_IXUSR & ss.st_mode)
 			{
 				cout << green << filenames.at(i) << white;
-				for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+				for (unsigned int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
 					{
 						cout << " ";
 					}
@@ -204,7 +204,7 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			else
 			{
 				cout << filenames.at(i);
-				for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+				for (unsigned int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
 					{
 						cout << " ";
 					}
