@@ -19,8 +19,7 @@ using namespace std;
 char blue[] = {"\033[1;34m"};
 char white[] = {"\033[0;00m"};
 char green[] = {"\033[1;32m"};
-
-
+char gray[] = {"\033[1;47;34m"};
 void case_dash(bool& aa, bool& ll, bool& RR, bool& gg, char* word)
 {
 	int i = 1;
@@ -75,10 +74,47 @@ void sort_dir (vector<string>& f)
 	sort(f.begin(), f.end(), comparedir);
 }
 
-void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir, bool first)
+
+void dir_size( bool all, vector<string> a , string currdir)
+{
+	unsigned int size = 0;
+	
+	struct stat sss;
+	
+	unsigned int i =0 ;
+	for (i =0 ; i<a.size(); i++)
+	{
+		string path = currdir + '/' + a.at(i);
+		stat(path.c_str(), &sss);
+
+		if ( !(all) && (a.at(i).at(0) == '.'))
+		{
+			size = size;
+		}
+		else
+		{
+			size = size + sss.st_blocks;
+		}
+	}
+	
+	cout << "total: " << size/2 << endl;
+
+	return;
+}
+
+void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir, bool do_R)
 {
 	//cout << endl;
-	cout << dir << ": " << endl;
+	if (do_R)
+	{
+		cout << dir << ": " << endl;
+	}
+	
+	if (do_l)
+	{
+		dir_size(do_all, filenames, dir);
+	}
+
 	if (!do_all)
 	{
 		//fix vector is it is not a
@@ -105,7 +141,14 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			
 			if (S_ISDIR(ss.st_mode))
 			{
-				cout << blue << filenames.at(i) << white << "  ";
+				if (filenames.at(i).at(0) == '.')
+				{
+					cout << gray << filenames.at(i) << white << "  ";
+				}
+				else
+				{
+					cout << blue << filenames.at(i) << white << "  ";
+				}
 			}
 			else if (S_IXUSR & ss.st_mode)
 			{
@@ -235,23 +278,30 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			cout.width(7);
 			cout << right << f1.st_size;
 			cout << " " << time << " ";
-			cout <<filenames.at(i)<< endl;
+			//cout <<filenames.at(i)<< endl;
 		
 			//struct stat ss;
 			//stat(filenames.at(i).c_str(), &ss);
 			
-			//if (S_ISDIR(f1.st_mode))
-			//{
-			//	cout << blue << filenames.at(i) << white << endl;
-			//}
-			//else if (S_IXUSR & f1.st_mode)
-			//{
-		//		cout << green << filenames.at(i) << white << endl;
-		//	}
-		//	else
-		//	{
-		//		cout << filenames.at(i) <<  endl;
-		//	}
+			if (S_ISDIR(f1.st_mode))
+			{
+				if (filenames.at(i).at(0) == '.')
+				{
+					cout << gray << filenames.at(i) << white << endl;
+				}
+				else
+				{
+					cout << blue << filenames.at(i) << white << endl;
+				}
+			}
+			else if (S_IXUSR & f1.st_mode)
+			{
+				cout << green << filenames.at(i) << white << endl;
+			}
+			else
+			{
+				cout << filenames.at(i) <<  endl;
+			}
 			
 		}
 	}
@@ -297,11 +347,11 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 	vector < vector<string> > needrecur;
 	vector <string> needname;
 
-	bool dot = false;
+	//bool dot = false;
 
 	int do_from =0;
 	
-	for (int y =0; y < filesforR.size();y++)
+	for (unsigned int y =0; y < filesforR.size();y++)
 	{
 		if (filesforR.at(y).at(0) == '.')
 		{
@@ -379,7 +429,7 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 	
 	//string r = "";
 	
-	print_file(aaa,lll,filesforR,curr_dir,0 );
+	print_file(aaa,lll,filesforR,curr_dir,1);
 
 	//bool notf = false;
 	//now do the innder dirs
