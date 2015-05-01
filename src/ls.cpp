@@ -13,6 +13,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+#include <sys/ioctl.h>
 
 using namespace std;
 
@@ -102,6 +103,18 @@ void dir_size( bool all, vector<string> a , string currdir)
 	return;
 }
 
+int get_max_size (vector <string> a)
+{
+	int max =0;
+	for (unsigned t =0; t <a.size(); t++)
+	{
+		if (a.at(t).size() > max)
+		{
+			max = a.at(t).size();
+		}
+	}
+	return max;
+}
 void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir, bool do_R)
 {
 	//cout << endl;
@@ -128,6 +141,17 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 	//cout <<"size: " << filenames.size() << endl;
 	if (! do_l )
 	{
+		struct winsize tersiz;
+		ioctl (STDOUT_FILENO, TIOCGWINSZ, &tersiz);
+		
+		cout <<  "size" << tersiz.ws_col <<endl;
+		int terminalsize = tersiz.ws_col ;
+		
+		int maxsize = get_max_size (filenames) + 2;
+		
+		//bool atmax = false;
+		int current_size = 0;
+
 		// just print names
 		for (unsigned int i =0; i < filenames.size();i++)
 		{
@@ -139,24 +163,51 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			struct stat ss;
 			stat(path.c_str(), &ss);
 			
+			if (current_size + maxsize +3 >  terminalsize )
+			{
+				cout << endl;
+				current_size = 0;
+			}
+			else
+			{
+				current_size = current_size + maxsize + 3;
+
+			}
+
 			if (S_ISDIR(ss.st_mode))
 			{
 				if (filenames.at(i).at(0) == '.')
 				{
-					cout << gray << filenames.at(i) << white << "  ";
+					cout << gray << filenames.at(i) << white;
+					for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+					{
+						cout << " ";
+					}
 				}
 				else
 				{
-					cout << blue << filenames.at(i) << white << "  ";
+					cout << blue << filenames.at(i) << white;
+					for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+					{
+						cout << " ";
+					}
 				}
 			}
 			else if (S_IXUSR & ss.st_mode)
 			{
-				cout << green << filenames.at(i) << white << " ";
+				cout << green << filenames.at(i) << white;
+				for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+					{
+						cout << " ";
+					}
 			}
 			else
 			{
-				cout << filenames.at(i) <<  " " ;
+				cout << filenames.at(i);
+				for (int y = 0; y < (maxsize - filenames.at(i).size()) ; y++)
+					{
+						cout << " ";
+					}
 			}
 		}
 	}
@@ -351,16 +402,25 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 
 	int do_from =0;
 	
-	for (unsigned int y =0; y < filesforR.size();y++)
+	if (aaa)
 	{
-		if (filesforR.at(y).at(0) == '.')
+		do_from = 2;
+	}
+	else
+	{
+		for (unsigned y  =0; y < filesforR.size();y++)
 		{
-			do_from ++;
+			if (filesforR.at(y).at(0) == '.')
+			{
+				do_from ++;
+			}
 		}
 	}
 	
 	for (unsigned int i = do_from; i < filesforR.size(); i++)
 	{
+		if (filesforR.at(i).size() >0)
+		{
 		//cout << filesforR.at(i) << "contain slash? " << notcontain_slash(filesforR.at(i))<<endl;
 
 		if (1)
@@ -416,14 +476,20 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 	
 			if (innerfiles.size()>0)
 			{
-				//cout << "did push_back" << endl;
-				needrecur.push_back(innerfiles);
-				needname.push_back (path);
+				if (filesforR.at(i)== "." || filesforR.at(i) == "..")
+				{
+				}
+				else
+				{
+					//cout << "did push_back" << endl;
+					needrecur.push_back(innerfiles);
+					needname.push_back (path);
+				}
 			}
 		
 		}
 				//dot =false;
-
+		}
 	}
 	// after checking print content
 	
