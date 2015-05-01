@@ -105,7 +105,7 @@ void dir_size( bool all, vector<string> a , string currdir)
 
 int get_max_size (vector <string> a)
 {
-	int max =0;
+	unsigned int max =0;
 	for (unsigned t =0; t <a.size(); t++)
 	{
 		if (a.at(t).size() > max)
@@ -115,10 +115,10 @@ int get_max_size (vector <string> a)
 	}
 	return max;
 }
-void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir, bool do_R)
+void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir, bool do_R, bool more_dir)
 {
 	//cout << endl;
-	if (do_R)
+	if (do_R || more_dir)
 	{
 		cout << dir << ": " << endl;
 	}
@@ -144,8 +144,8 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 		struct winsize tersiz;
 		ioctl (STDOUT_FILENO, TIOCGWINSZ, &tersiz);
 		
-		cout <<  "size" << tersiz.ws_col <<endl;
-		unsigned int terminalsize = tersiz.ws_col ;
+		//cout <<  "size" << tersiz.ws_col <<endl;
+		unsigned int terminalsize = tersiz.ws_col -3;
 		
 		unsigned int maxsize = get_max_size (filenames) + 2;
 		
@@ -495,7 +495,7 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 	
 	//string r = "";
 	
-	print_file(aaa,lll,filesforR,curr_dir,1);
+	print_file(aaa,lll,filesforR,curr_dir,1, 1);
 
 	//bool notf = false;
 	//now do the innder dirs
@@ -587,7 +587,7 @@ int main (int argc, char * argv[])
 
 		if (!has_R)
 		{
-			print_file (has_a, has_l, files, directory.at(i),0);
+			print_file (has_a, has_l, files, directory.at(i),0, 1);
 		}
 		else
 		{
