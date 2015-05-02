@@ -435,7 +435,11 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 
 			vector<string> innerfiles;
 			DIR *open_innerdir = opendir((char*) path.c_str());
-		
+			if (open_innerdir == NULL)
+			{
+				//perror ("open fail.");
+				//exit(1);
+			}	
 			if(S_ISDIR(f2.st_mode))
 			{
 				//cout <<  path << "this is dirs!!!!!!"<< endl;
@@ -513,9 +517,53 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 	
 }
 
+bool is_a_file (string a)
+{
+	vector <string> check;
+
+	string dir = ".";
+
+	DIR *open = opendir ( (char*) dir.c_str() );
+	
+	if (open == NULL)
+	{
+		perror("open fail");
+		exit(1);
+	}
+	dirent *b;
+	while ( (b = readdir(open)) )
+	{
+		if (b == NULL)
+		{
+			perror ("read directory fail");
+			exit(1);
+		}
+
+			string c = b-> d_name;
+			check.push_back (c);
+	}
+	
+	if (closedir(open) == -1)
+	{
+		perror ("close directory fail.");
+	}
+	//struct stat s;
+	//stat( ('.' + '/'+ a).c_str(), &s );
+	//if (S_ISDIR)
+
+	for (unsigned r =0; r < check.size(); r++)
+	{
+		if (check.at(r) == a)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 
-
+			
 int main (int argc, char * argv[])
 {
 	bool has_a = false;
@@ -556,12 +604,42 @@ int main (int argc, char * argv[])
 		
 		//cout << "222" << endl;
 
+		bool do_it = true;
+		
+		string qq = directory.at(i);
+		string ww = "./"+qq;		
+		struct stat s2;
+		stat (ww.c_str() , &s2);
+
 		if (opened_dir == NULL)
 		{
-			perror("open not existing directory.");
-			exit(1);
+			if (is_a_file (directory.at(i)) && !S_ISDIR(s2.st_mode) )
+			{
+				if (has_l)
+				{
+					vector<string> justone;
+					string qwq = ".";
+					bool QAQ = true;
+					justone.push_back(directory.at(i));
+					print_file (QAQ,QAQ,justone, qwq ,0,1);
+				}
+				else
+				{
+					cout << directory.at(i) << endl;
+					cout << endl;
+				}
+				do_it = false;
+			}
+			else
+			{
+				//cout << directory.at(i) << endl;
+				perror("opening not existing directory.");
+				exit(1);
+			}
 		}
 
+	if (do_it)
+	{
 		dirent *a;
 		while ( (a = readdir(opened_dir)) )
 		{
@@ -574,6 +652,11 @@ int main (int argc, char * argv[])
 			string b = a-> d_name;
 			files.push_back (b);
 		}
+
+		//if (closedir(opened_dir) == -1)
+		//{
+		//	perror ("close directory fail.");
+		//}
 
 		sort_dir (files);
 
@@ -599,6 +682,14 @@ int main (int argc, char * argv[])
 		{
 			perror ("close directory");
 		}
+	}
+	else
+	{
+		if (closedir(opened_dir) == -1)
+		{
+			//perror ("close directory");
+		}
+	}
 	}
 	
 	
