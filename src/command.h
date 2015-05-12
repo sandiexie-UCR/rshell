@@ -23,6 +23,7 @@ class command
 		char get_sperator();
 		string get_call();
 		char** get_arr();
+		vector<string> get_copy();
 };
 
 void command :: set_copy( vector<string> a )
@@ -54,7 +55,7 @@ void command :: reset()
 
 	arg[keep+1] = NULL;	
 		
-	call = copy.at(0);	
+	//call = copy.at(0);	
 }
 
 command :: command ()
@@ -95,5 +96,17 @@ void command :: set_sperator(char c)
 
 void command :: printc ()
 {
-	cout << call<<"("<<sperator<<")";
+	cout << "call: " << call<<" ";
+	//for (int y=0; y<copy.size(); y++)
+	//{
+	//	cout << copy.at(y)<< " ";
+	//}
+	
+	cout << "symbol:" << sperator << endl;
+	//cout << call<<"("<<sperator<<")";
+}
+
+vector<string> command :: get_copy()
+{
+	return copy;
 }
