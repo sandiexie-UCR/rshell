@@ -12,8 +12,8 @@
 #include <sys/stat.h>
 using namespace std;
 
-int SI = dup(1);
-int SO = dup(0);
+int SO = dup(1);
+int SI = dup(0);
 
 void user()
 {
@@ -200,33 +200,20 @@ bool is_pipe (command a)
 	return false;
 }
 
-vector<command> parsing_pipe (string a)
+vector<command> parsing_pipe (char** b)
 {
-	char* aa = (char*) a.c_str();
-	char* get;
-
-	string bb="";
-
-	get = strtok(aa, " ");
-	if (get!=NULL)
+	int i = 0;	
+	string a;
+	int j;
+	while ( b[i] != NULL )
 	{
-		bb = bb+get.c_str();
+		a = a + ' '+b[i];
+		i++;
 	}
-
-	while(get!=NULL)
-	{
-		get = strtok(NULL, " ");
-		if (get != NULL)
-		{
-			bb = bb+get.c_str();
-		}
-	}
-
-	a = bb;
-	cout << "after white space:" << a << endl;
+	//cout << "after white space:" << a << endl;
 
 	vector <command> re;
-	command ree;
+	
 
 	vector <size_t> places;
 
@@ -234,40 +221,90 @@ vector<command> parsing_pipe (string a)
 	{
 		if ( a.at(it)=='>' || a.at(it)=='<' || a.at(it)=='|' )
 		{
-			//cout << it << endl;
 			places.push_back(it);
 		}
 	}
 
 	for (size_t it=0; it<places.size();it++)
 	{
+		command ree;
+		
 		string haha;
 		if (it==0)
 		{
-			//cout << it << ": " << places.at(it)<< endl;
-			haha = a.substr( 0, (places.at(it)-1));
-			//cout<< haha;
+			haha = a.substr( 0, (places.at(it)));
 		}
 		else
 		{
-			haha = a.substr((places.at(it-1)+1), (places.at(it)-1));
+			haha = a.substr((places.at(it-1)), (places.at(it)));
 		}
-
+		
 		char symbol = a.at(places.at(it));
 
 		ree.set_call(haha, symbol);
-		re.push_back(ree);
+		
+		vector <string> cpy;
+		
+		char* whole = (char*) haha.c_str();
+		char* get2;
 
-		if (it==(places.size()-1))
+		get2 = strtok (whole, " ");
+		if(get2 != NULL)
 		{
+			cpy.push_back(get2);
+		}
+
+		while (get2 != NULL)
+		{
+			get2 = strtok (NULL, " ");
+			if (get2 != NULL)
+			{
+				cpy.push_back(get2);
+			}
+		}
+
+		ree.set_copy(cpy);
+		ree.reset();
+		
+		re.push_back(ree);
+		
+		if (it == (places.size()-1))
+		{
+			
 			if (it != a.length()-1)
 			{
-				haha = a.substr ((places.at(it)+1), a.length()-1);
-				symbol = '.';
 
-				ree.set_call (haha,symbol);
-				ree.reset();
-				re.push_back(ree);
+				command ree2;
+		
+				haha = a.substr ((places.at(it)+1), a.length());
+
+				symbol = '.';
+				
+				vector <string> cpy2;
+		
+				char* whole = (char*) haha.c_str();
+				char* get2;
+
+				get2 = strtok (whole, " ");
+				if(get2 != NULL)
+				{
+					cpy2.push_back(get2);
+				}
+
+				while (get2 != NULL)
+				{
+					get2 = strtok (NULL, " ");
+					if (get2 != NULL)
+					{
+						cpy2.push_back(get2);
+					}
+				}
+		
+				ree2.set_call(haha, symbol);
+				ree2.set_copy(cpy2);
+				ree2.reset();
+
+				re.push_back(ree2);
 			}
 		}
 	}
@@ -277,65 +314,67 @@ vector<command> parsing_pipe (string a)
 void pipe_in(command a, command b, string& output)
 {
 	// a < b;
-}
 
-void pipe_out (command a, command b, string& output)
-{
-	cout << "here" << endl;
-	// a > b;
-	//cout <<"get_call: " << b.get_call() << endl;
-	int fdb = open ( b.get_call().c_str(), O_WRONLY | O_CREAT |O_TRUNC, 00664);
+	int fdb = open (b.get_arr()[0], O_RDONLY);
 	if (fdb == -1)
 	{
 		perror ("open file");
 	}
 
-	pid_t pid = fork();
+	close(0);
+	dup(fdb);
 
-	if (pid == -1)
+	if (execute(a.get_arr())== false)
 	{
-		perror ("fork");
+		perror ("execute");
 	}
-	else if (pid == 0)
-	{
-		//close(1);
-		//dup(fdb);
+	
+	close (fdb);
+	dup2(SI,0);
+}
 
-		cout << "arr: " << a.get_arr() << endl;
-		if (execute(a.get_arr()) == false)
-		{
+void pipe_out (command a, command b, string& output)
+{
+	// a > b;
+	int fdb = open ( b.get_arr()[0], O_WRONLY | O_CREAT |O_TRUNC, 00664);
+	if (fdb == -1)
+	{
+		perror ("open file");
+	}
+	close(1);
+	dup(fdb);
+
+		//cout << "arr: " << a.get_arr()[3] << endl;
+	if (execute(a.get_arr()) == false)
+	{
 			perror("execute");
-		}
 	}
-	else if (pid > 0)
-	{
-		cout << "p" << endl;
-		wait(0);
-		//close (fdb);
-		//dup2(SI,1);
-	}
+	//wait(0);
+	close (fdb);
+	dup2(SO,1);
 
 }
 
 
 void run_pipe (command a)
 {
-	vector<command> list = parsing_pipe (a.get_call());	
+	//cout << "a call: " <<  a.get_call()<< endl;
+	vector<command> list = parsing_pipe (a.get_arr());	
 	
 	string temp;
 
-	cout << "listsize: " << list.size()<< endl;
+	//cout << "listsize: " << list.size()<< endl;
 
 	for (unsigned int i =0; i<list.size(); i++)
 	{
 		cout << "S: " << list.at(i).get_sperator() << endl;
 		if (list.at(i).get_sperator() == '<')
 		{
-			//pipe_in (list.at(i), list.at(i+1), temp);
+			pipe_in (list.at(i), list.at(i+1), temp);
 		}
 		else if (list.at(i).get_sperator() == '>')
 		{
-			cout << "here" << endl;
+			//cout << "here" << endl;
 			pipe_out (list.at(i), list.at(i+1), temp);
 		}
 		else if (list.at(i).get_sperator() == '|')
@@ -582,10 +621,7 @@ if (syscalls.size()>0)
 					}
 				}
 			}
-			
-
-
-			
+						
 		}
 		}
 		}

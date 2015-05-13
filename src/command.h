@@ -54,7 +54,7 @@ void command :: reset()
 
 
 	arg[keep+1] = NULL;	
-		
+	
 	//call = copy.at(0);	
 }
 
