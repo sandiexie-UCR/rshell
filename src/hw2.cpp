@@ -10,6 +10,8 @@
 #include "command.h"
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <fstream>
+#include <sys/sendfile.h>
 using namespace std;
 
 int SO = dup(1);
@@ -421,62 +423,21 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 				cout << "missing output file." << endl;
 			}
 		}
-
-
-		//close (0);
-		//dup (fd_0);
-
 		
-		cout << "wait" << endl;
-		char buf[BUFSIZ];
-		read (fd_0, buf, BUFSIZ);
-		cout << "here" << endl;
-		//string hold;
-		//getline(cin,hold);
-		//cout << "waiting" << endl;
-		//close (fd_0);
-		//dup2 (SI, 0);
-
+		//cout << "wait" << endl;
 		close (1);
 		dup (fdb2);
+		
+		cout << output;
 
-		cout << "yes" ;
-		write (fdb2, buf, BUFSIZ);
-		cout << "here" ;		
 		close (fdb2);
 		dup2 (SO,1);
 		
-		//cout << "f: " << f << endl;
-		
+		char buf[BUFSIZ];
+		read (fd_0, buf, BUFSIZ);
+
 		if (has_follow)
 		{
-			cout << "here";
-			int fdb12 = open (b.get_arr()[0], O_WRONLY | O_CREAT | O_TRUNC, 006644);
-			if (fdb12 == -1)
-			{
-				perror ("open file");
-				if (b.get_arr()[0] == NULL)
-				{
-					cout << "missing output file." << endl;
-				}
-			}
-			
-			close (0);
-			dup (fdb12);
-			
-			string k;
-			getline(cin,k);
-
-			close(fdb12);
-			dup2(SI,0);
-
-			close (1);
-			dup (fd_1);
-			
-			cout << k;
-
-			close (fd_1);
-			dup2 (SO,1);
 		}
 	}
 	else
@@ -516,66 +477,106 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 		//		cout << "missing output file." << endl;
 		//	} 
 		//}
-			
-		close (0);
-		dup (fdb);
-
-		char qq[BUFSIZ];
-
-		read (fdb, qq, sizeof(qq));		
 		
-		close (fdb);
+		int fb = open ( b.get_arr()[0], O_RDONLY);
+		if (fb == -1)
+		{
+			perror ("open file");
+			if (b.get_arr()[0] == NULL)
+			{
+				cout << "missing output file." << endl;
+			} 
+		}
+		
+		char te;	
+		string word;
+
+		ifstream file1;
+		file1.open(b.get_arr()[0]);
+
+		while (file1.get(te))
+		{
+			word.push_back(te);
+		}
+	
+		cout << "word"<< word << endl;
+
+		output = word;
+		fdb = open ( b.get_arr()[0], O_RDONLY);
+		if (fdb == -1)
+		{
+			perror ("open file");
+			if (b.get_arr()[0] == NULL)
+			{
+				cout << "missing output file." << endl;
+			} 
+		}
+/*		close (0);
+		dup (fb);
+
+		//char qq[BUFSIZ];
+
+		//read (fb, (char*)word.c_str(), BUFSIZ);		
+		getline(cin,te);
+
+		close (fb);
 		dup2 (SI,0);
 
-		//cout << "qq: " << qq << endl;
-
+		//string te = qq;
+		cout << "te: " << te << endl;
+*/
 		close (1);
 		dup (fd_1);
 
-		write (fd_1, qq, sizeof(qq));
-		
+		cout << word;
+
 		close (fd_1);
 		dup2 (SO,1);
-
-		//cout << "qq: " << qq << endl;
-		//char buf3[BUFSIZ];
-
-		//int fdb3 = open (b.get_arr()[0], O_RDONLY);
-	
-		//read (fdb3, buf3, BUFSIZ);
-	
-		//close (fdb3);
-
-		//output = buf3;
 	}
 
 }
 
 
-void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1)
+void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1, string& output)
 {
+	int pi[2];
+	if (-1 == pipe(pi))
+	{
+		perror ("pipe");
+	}
+
 	if (in)
 	{
 		if (follow)
 		{
-			close (0);
-			dup (fd_0);
-	
-			close (1);
-			dup (fd_1);
+			size_t pid = fork();
+			if (pid == 0)
+				{
 
-			if(execute(b.get_arr()) == false)
+				close (1);
+				dup (pi[1]);
+				
+				if(execute(b.get_arr()) == false)
+				{
+				}
+			
+				
+				}
+			if (pid > 0)
 			{
+				wait(0);
+
+				//close (0);
+				//dup(fd_0);
+			
+				close (pi[1]);
+				dup2(SO,1);
 			}
-			
-			close (fd_1);
-			dup2(SO,1);
-			
-			close (fd_0);
-			dup2(SI,0);
+			//cout << "wow "<<wow << endl;
 		}
 		else
 		{
+			//write (fd_0, (char*)output.c_str(), BUFSIZ);
 			close (0);
 			dup(fd_0);
 			
@@ -585,35 +586,8 @@ void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1)
 			
 			close (fd_0);
 			dup2 (SI,0);
+			cout << "done" << endl;
 		}
-
-		/*	int fr[2];
-			if (-1 == pipe(fr))
-			{
-				perror ("pipe");
-			}
-	
-			close(1);
-			dup(fr[1]);
-		
-			if (execute(s) == false)
-			{
-				perror ("execute");
-			}
-
-			close (fr[1]);
-			dup2 (SO,1);
-
-			close (0);
-			dup(fr[0]);
-
-			if (execute(b.get_arr()) == false)
-			{
-				perror ("execute");
-			}
-		
-			close (fr[0]);i
-			dup2 (SI,0); */
 	}
 	else
 	{
@@ -629,20 +603,28 @@ void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1)
 
 		if (follow)
 		{
+			int pi[2];
+			if (-1 == pipe(pi))
+			{
+				perror ("pipe");
+			}
+
 			close (0);
 			dup(fd_0);
 
 			close (1);
-			dup(fd_1);
+			dup(pi[1]);
 
 			if (execute(b.get_arr())==false)
 			{}
 						
-			close (fd_1);
-			dup2 (SO,1);
+			close (pi[1]);
+			dup2 (SO,1.);
 	
 			close (fd_0);
 			dup2 (SI,0);
+			
+			read (pi[1], (void *)fd_1, BUFSIZ);
 		}
 		else
 		{
@@ -696,62 +678,24 @@ void run_pipe (command a)
 		if (list.at(i).get_sperator() == '<')
 		{
 			pipe_in (list.at(i), list.at(i+1), temp, for_in, fd[0], fd[1]);
-			//cout << "temp: " << temp << endl;
 			has_fd = true;
-			if( temp.length() != 0 )
-			{
-				//write (fd[1],temp.c_str(),temp.length());
-				has_fd = true;
-			}
 		}
 		else if (list.at(i).get_sperator() == '>')
 		{
-			//cout << "here" << endl;
 			pipe_out (list.at(i), list.at(i+1), temp, has_fd,for_in, store, fd[0],fd[1]);
-			//cout << "temp: " << temp << endl;
-			
 			has_fd = true;
-			//if (temp.length() != 0)
-			//{
-				//write (fd[1],temp.c_str(),temp.length());
-			//	has_fd = true;
-			//}
-			//cout << "temp: " << endl;
-			//cout << temp;
 		}
 		else if (list.at(i).get_sperator() == '|')
 		{
-			pipe_pipe (list.at(i), list.at(i+1), has_fd, for_in, fd[0], fd[1]);
+			pipe_pipe (list.at(i), list.at(i+1), has_fd, for_in, fd[0], fd[1], temp);
 		}
 		else
 		{
 			//last one, do nothing;
 		}
 	}
-
-	//fflash(fd[0]);
-	//fflash(fd[1]);
-	//int flash = fcloseall (fd[0]);
-	//int flash2 = fcloseall (fd[1]);
-	//dup2(SI,0);
-	//dup2(SO,1);
-	//close(1);
-	//dup(fd[1]);
-	
-	
-	//string f = " ";
-	//write (fd[1],f.c_str(),1);
-
-	//fopen (fd[0],"w");
 	close (fd[0]);
 	close (fd[1]);
-	//dup2(SO,1);
-	//temp.clear();
-	//close (fd[1]);
-	//delete (fd[0]);
-	//delete (fd[1]);
-
-	//delete[] fd;
 }
 
 
