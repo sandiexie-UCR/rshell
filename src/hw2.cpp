@@ -225,20 +225,24 @@ vector<command> parsing_pipe (char** b)
 		}
 	}
 
-	for (size_t it=0; it<places.size();it++)
+	for (size_t it=0; it < places.size();it++)
 	{
+		//cout << "it:" << places.at(it);
+
 		command ree;
 		
 		string haha;
-		if (it==0)
+		if (it == 0)
 		{
 			haha = a.substr( 0, (places.at(it)));
 		}
 		else
 		{
-			haha = a.substr((places.at(it-1)), (places.at(it)));
+			//cout << "mid" << endl;
+			haha = a.substr ( (places.at(it-1)+1), (places.at(it) - places.at(it-1))-1);
 		}
 		
+		//cout << haha << endl;
 		char symbol = a.at(places.at(it));
 
 		ree.set_call(haha, symbol);
@@ -277,7 +281,6 @@ vector<command> parsing_pipe (char** b)
 				command ree2;
 		
 				haha = a.substr ((places.at(it)+1), a.length());
-
 				symbol = '.';
 				
 				vector <string> cpy2;
@@ -299,60 +302,361 @@ vector<command> parsing_pipe (char** b)
 						cpy2.push_back(get2);
 					}
 				}
-		
+				
 				ree2.set_call(haha, symbol);
 				ree2.set_copy(cpy2);
+				//cout << "c_size:" << cpy2.size()<< endl;
 				ree2.reset();
-
 				re.push_back(ree2);
 			}
 		}
+		//cout << "parsing1" << endl;
 	}
+	//cout << "parsing2" << endl;
 	return re;
 }
 
-void pipe_in(command a, command b, string& output)
+void pipe_in(command a, command b, string& output, bool in, int fd_0, int fd_1)
 {
+	//cout << a.get_call() << endl;
+	//cout << b.get_call() << endl;
+
 	// a < b;
 
 	int fdb = open (b.get_arr()[0], O_RDONLY);
 	if (fdb == -1)
 	{
 		perror ("open file");
+		if (b.get_arr()[0] == NULL)
+		{
+			cout << "missing input file." << endl;
+		}
 	}
 
-	close(0);
-	dup(fdb);
+	//int fd2[2];
+	//if (-1 == pipe(fd2))
+	//{
+	//	perror("pipe");
+	//}
 
-	if (execute(a.get_arr())== false)
+	if (in)
 	{
-		perror ("execute");
+		cout << "in" << endl;
+		close(0);
+		dup(fdb);
+		
+		close (1);
+		dup(fd_1);
+
+		if (execute(a.get_arr()) == false )
+		{
+			perror ("execute");
+		}
+
+		close (fd_1);
+		dup2 (SO,1);
+
+		close (fdb);
+		dup2 (SI,0);
+
+		//char buf4 [BUFSIZ];
+		//read(fd2[0], buf4, BUFSIZ);
+		
+		//cout <<"buf4: "  << buf4 << endl;
+
+		//output = buf4;
+		
+		//fd2[0] = '\0';
 	}
+	else
+	{
+		cout << "!in" << endl;
+		close(0);
+		dup(fdb);
+
+		if (execute(a.get_arr())== false)
+		{
+			perror ("execute");
+		}
 	
-	close (fdb);
-	dup2(SI,0);
+		close (fdb);
+		dup2(SI,0);
+
+		// set fd
+		//string temp;
+	
+		//char buf2[BUFSIZ];
+
+		//int fdb2 = open (b.get_arr()[0], O_RDONLY);
+	
+		//read (fdb2, buf2, BUFSIZ);
+	
+		//close (fdb2);
+		
+		//output = buf2;
+		//write (filed[1], temp, BUFSIZ);
+
+		//cout << "temp: " << temp << endl;
+	}
+
+	//int fd20 = fcloseall(fd2[0]);
+	//int fd21 = fcloseall(fd2[1]);
+
+	//close (fd2[0]);
+	//close (fd2[1]);
 }
 
-void pipe_out (command a, command b, string& output)
+void pipe_out (command a, command b, string& output, bool has_prev, bool has_follow, char** s, int& fd_0, int& fd_1)
 {
-	// a > b;
-	int fdb = open ( b.get_arr()[0], O_WRONLY | O_CREAT |O_TRUNC, 00664);
-	if (fdb == -1)
+	//cout << a.get_call() << endl;
+	//cout << b.get_call() << endl;
+	if (has_prev)
 	{
-		perror ("open file");
+		int fdb2 = open (b.get_arr()[0], O_WRONLY | O_CREAT | O_TRUNC, 006644);
+		if (fdb2 == -1)
+		{
+			perror ("open file");
+			if (b.get_arr()[0] == NULL)
+			{
+				cout << "missing output file." << endl;
+			}
+		}
+
+
+		//close (0);
+		//dup (fd_0);
+
+		
+		cout << "wait" << endl;
+		char buf[BUFSIZ];
+		read (fd_0, buf, BUFSIZ);
+		cout << "here" << endl;
+		//string hold;
+		//getline(cin,hold);
+		//cout << "waiting" << endl;
+		//close (fd_0);
+		//dup2 (SI, 0);
+
+		close (1);
+		dup (fdb2);
+
+		cout << "yes" ;
+		write (fdb2, buf, BUFSIZ);
+		cout << "here" ;		
+		close (fdb2);
+		dup2 (SO,1);
+		
+		//cout << "f: " << f << endl;
+		
+		if (has_follow)
+		{
+			cout << "here";
+			int fdb12 = open (b.get_arr()[0], O_WRONLY | O_CREAT | O_TRUNC, 006644);
+			if (fdb12 == -1)
+			{
+				perror ("open file");
+				if (b.get_arr()[0] == NULL)
+				{
+					cout << "missing output file." << endl;
+				}
+			}
+			
+			close (0);
+			dup (fdb12);
+			
+			string k;
+			getline(cin,k);
+
+			close(fdb12);
+			dup2(SI,0);
+
+			close (1);
+			dup (fd_1);
+			
+			cout << k;
+
+			close (fd_1);
+			dup2 (SO,1);
+		}
 	}
-	close(1);
-	dup(fdb);
+	else
+	{
+		// a > b;
+	
+		int fdb = open ( b.get_arr()[0], O_WRONLY | O_CREAT |O_TRUNC, 00664);
+		if (fdb == -1)
+		{
+			perror ("open file");
+			if (b.get_arr()[0] == NULL)
+			{
+				cout << "missing output file." << endl;
+			} 
+		}
+	
+		close(1);
+		dup(fdb);
 
 		//cout << "arr: " << a.get_arr()[3] << endl;
-	if (execute(a.get_arr()) == false)
-	{
-			perror("execute");
-	}
-	//wait(0);
-	close (fdb);
-	dup2(SO,1);
+		if (execute(a.get_arr()) == false)
+		{
+		//
+		}
 
+		//output = buf;
+		//wait(0);
+		close (fdb);
+		dup2(SO,1);
+	
+		//fdb = open ( b.get_arr()[0], O_WRONLY | O_CREAT |O_TRUNC, 00664);
+		//if (fdb == -1)
+		//{
+		//	perror ("open file");
+		//	if (b.get_arr()[0] == NULL)
+		//	{
+		//		cout << "missing output file." << endl;
+		//	} 
+		//}
+			
+		close (0);
+		dup (fdb);
+
+		char qq[BUFSIZ];
+
+		read (fdb, qq, sizeof(qq));		
+		
+		close (fdb);
+		dup2 (SI,0);
+
+		//cout << "qq: " << qq << endl;
+
+		close (1);
+		dup (fd_1);
+
+		write (fd_1, qq, sizeof(qq));
+		
+		close (fd_1);
+		dup2 (SO,1);
+
+		//cout << "qq: " << qq << endl;
+		//char buf3[BUFSIZ];
+
+		//int fdb3 = open (b.get_arr()[0], O_RDONLY);
+	
+		//read (fdb3, buf3, BUFSIZ);
+	
+		//close (fdb3);
+
+		//output = buf3;
+	}
+
+}
+
+
+void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1)
+{
+	if (in)
+	{
+		if (follow)
+		{
+			close (0);
+			dup (fd_0);
+	
+			close (1);
+			dup (fd_1);
+
+			if(execute(b.get_arr()) == false)
+			{
+			}
+			
+			close (fd_1);
+			dup2(SO,1);
+			
+			close (fd_0);
+			dup2(SI,0);
+		}
+		else
+		{
+			close (0);
+			dup(fd_0);
+			
+			if (execute(b.get_arr())== false)
+			{
+			}
+			
+			close (fd_0);
+			dup2 (SI,0);
+		}
+
+		/*	int fr[2];
+			if (-1 == pipe(fr))
+			{
+				perror ("pipe");
+			}
+	
+			close(1);
+			dup(fr[1]);
+		
+			if (execute(s) == false)
+			{
+				perror ("execute");
+			}
+
+			close (fr[1]);
+			dup2 (SO,1);
+
+			close (0);
+			dup(fr[0]);
+
+			if (execute(b.get_arr()) == false)
+			{
+				perror ("execute");
+			}
+		
+			close (fr[0]);i
+			dup2 (SI,0); */
+	}
+	else
+	{
+		close (1);
+		dup(fd_1);
+		
+		if (execute(a.get_arr())==false)
+		{
+		}
+		
+		close (fd_1);
+		dup2(SO,1);
+
+		if (follow)
+		{
+			close (0);
+			dup(fd_0);
+
+			close (1);
+			dup(fd_1);
+
+			if (execute(b.get_arr())==false)
+			{}
+						
+			close (fd_1);
+			dup2 (SO,1);
+	
+			close (fd_0);
+			dup2 (SI,0);
+		}
+		else
+		{
+			close (0);
+			dup (fd_0);
+			
+			if(execute(b.get_arr())==false)
+			{}
+		
+			close (fd_0);
+			dup2 (SI,0);
+		}
+
+	}
 }
 
 
@@ -362,30 +666,92 @@ void run_pipe (command a)
 	vector<command> list = parsing_pipe (a.get_arr());	
 	
 	string temp;
-
+	bool has_fd = false;
 	//cout << "listsize: " << list.size()<< endl;
 
-	for (unsigned int i =0; i<list.size(); i++)
+
+	int fd[2];
+	if (-1 == pipe2(fd,O_CLOEXEC))
 	{
+		perror ("pipe");
+	}
+	
+	//int file0 = open ()
+	
+	char** store;
+
+	for (unsigned int i =0; i < list.size(); i++)
+	{
+		bool for_in = false;
+		if (i != list.size()-1)
+		{
+			if (list.at(i+1).get_sperator() == '>' || list.at(i+1).get_sperator() == '|')
+			{
+				store = list.at(i).get_arr();
+				for_in = true;
+			}
+		}
+
 		cout << "S: " << list.at(i).get_sperator() << endl;
 		if (list.at(i).get_sperator() == '<')
 		{
-			pipe_in (list.at(i), list.at(i+1), temp);
+			pipe_in (list.at(i), list.at(i+1), temp, for_in, fd[0], fd[1]);
+			//cout << "temp: " << temp << endl;
+			has_fd = true;
+			if( temp.length() != 0 )
+			{
+				//write (fd[1],temp.c_str(),temp.length());
+				has_fd = true;
+			}
 		}
 		else if (list.at(i).get_sperator() == '>')
 		{
 			//cout << "here" << endl;
-			pipe_out (list.at(i), list.at(i+1), temp);
+			pipe_out (list.at(i), list.at(i+1), temp, has_fd,for_in, store, fd[0],fd[1]);
+			//cout << "temp: " << temp << endl;
+			
+			has_fd = true;
+			//if (temp.length() != 0)
+			//{
+				//write (fd[1],temp.c_str(),temp.length());
+			//	has_fd = true;
+			//}
+			//cout << "temp: " << endl;
+			//cout << temp;
 		}
 		else if (list.at(i).get_sperator() == '|')
 		{
-			//pipe_pipe
+			pipe_pipe (list.at(i), list.at(i+1), has_fd, for_in, fd[0], fd[1]);
 		}
 		else
 		{
 			//last one, do nothing;
 		}
 	}
+
+	//fflash(fd[0]);
+	//fflash(fd[1]);
+	//int flash = fcloseall (fd[0]);
+	//int flash2 = fcloseall (fd[1]);
+	//dup2(SI,0);
+	//dup2(SO,1);
+	//close(1);
+	//dup(fd[1]);
+	
+	
+	//string f = " ";
+	//write (fd[1],f.c_str(),1);
+
+	//fopen (fd[0],"w");
+	close (fd[0]);
+	close (fd[1]);
+	//dup2(SO,1);
+	//temp.clear();
+	//close (fd[1]);
+	//delete (fd[0]);
+	//delete (fd[1]);
+
+	//delete[] fd;
 }
 
 
@@ -395,6 +761,10 @@ int main(int argc, char* argv[])
 {
 while(1)
 {
+	int uid = fork();
+	if (uid == 0)
+	{
+
 	user();
 
 	string input;
@@ -628,7 +998,12 @@ if (syscalls.size()>0)
 	}
 }
 	// codes to test whats in char** arr[]================================================
-		
+	exit(0);
+}
+else if (uid > 0)
+	{
+		wait(0);
+	}		
 }
 
 }

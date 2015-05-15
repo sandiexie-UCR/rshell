@@ -45,16 +45,21 @@ char command :: get_sperator()
 }
 void command :: reset()
 {
-	unsigned int keep;
+	unsigned int keep = 0 ;
 	for (unsigned int t=0; t<copy.size(); t++)
 	{
 		arg[t] = (char*) copy.at(t).c_str() ;
 		keep = t;
 	}
 
-
-	arg[keep+1] = NULL;	
-	
+	if (copy.size() >0)
+	{
+		arg[keep+1] = NULL;	
+	}
+	else
+	{
+		arg[keep] = NULL;
+	}
 	//call = copy.at(0);	
 }
 
