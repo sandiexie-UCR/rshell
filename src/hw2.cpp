@@ -206,7 +206,7 @@ vector<command> parsing_pipe (char** b)
 {
 	int i = 0;	
 	string a;
-	int j;
+	//int j;
 	while ( b[i] != NULL )
 	{
 		a = a + ' '+b[i];
@@ -318,11 +318,8 @@ vector<command> parsing_pipe (char** b)
 	return re;
 }
 
-void pipe_in(command a, command b, string& output, bool in, int fd_0, int fd_1)
+void pipe_in(command a, command b, string& output, bool follow , int fd_0, int fd_1)
 {
-	//cout << a.get_call() << endl;
-	//cout << b.get_call() << endl;
-
 	// a < b;
 
 	int fdb = open (b.get_arr()[0], O_RDONLY);
@@ -335,40 +332,82 @@ void pipe_in(command a, command b, string& output, bool in, int fd_0, int fd_1)
 		}
 	}
 
-	//int fd2[2];
-	//if (-1 == pipe(fd2))
-	//{
-	//	perror("pipe");
-	//}
-
-	if (in)
+	if (follow)
 	{
 		cout << "in" << endl;
-		close(0);
-		dup(fdb);
+		//close(0);
+		//dup(fdb);
 		
 		close (1);
 		dup(fd_1);
 
-		if (execute(a.get_arr()) == false )
+		
+		int pid = fork();
+		if (pid == 0)
 		{
-			perror ("execute");
+			close (0);
+			dup (fd_0);
+
+			if (execute(a.get_arr()) == false )
+			{
+				perror ("execute");
+			}
+			
+			close (fd_0);
+			dup2 (SI,0);
+		}
+		if(pid > 0)
+		{
+			wait(0);	
 		}
 
 		close (fd_1);
-		dup2 (SO,1);
-
-		close (fdb);
-		dup2 (SI,0);
-
-		//char buf4 [BUFSIZ];
-		//read(fd2[0], buf4, BUFSIZ);
+		dup2 (fd_1,SO);
+		//--------------------------------
+	/*	int fb = open ( b.get_arr()[0], O_RDONLY);
+		if (fb == -1)
+		{
+			perror ("open file");
+			if (b.get_arr()[0] == NULL)
+			{
+				cout << "missing output file." << endl;
+			} 
+		}
 		
-		//cout <<"buf4: "  << buf4 << endl;
+		char te;	
+		string word;
 
-		//output = buf4;
+		ifstream file1;
+		file1.open(b.get_arr()[0]);
+
+		while (fd_1.get(te))
+		{
+			word.push_back(te);
+		}
+	
+		cout << "word"<< word << endl;
+
+		output = word;*/
+		///------------------------------------------
+		string wew;
+
+		int size;
+
+		char c[1];
+		size = read (fd_1, (char*)wew.c_str(), sizeof(c));
 		
-		//fd2[0] = '\0';
+		cout << "wew:" << wew << endl;
+		while(size>0)
+		{
+			cout << "111" << endl;
+			wew.push_back(*c);
+			size = read (fd_1,c ,sizeof(c));			
+		}
+		//read (fd_1, output.c_str , )
+		//close (fdb);
+		//dup2 (SI,0);
+
+		output = wew;
 	}
 	else
 	{
@@ -384,28 +423,7 @@ void pipe_in(command a, command b, string& output, bool in, int fd_0, int fd_1)
 		close (fdb);
 		dup2(SI,0);
 
-		// set fd
-		//string temp;
-	
-		//char buf2[BUFSIZ];
-
-		//int fdb2 = open (b.get_arr()[0], O_RDONLY);
-	
-		//read (fdb2, buf2, BUFSIZ);
-	
-		//close (fdb2);
-		
-		//output = buf2;
-		//write (filed[1], temp, BUFSIZ);
-
-		//cout << "temp: " << temp << endl;
 	}
-
-	//int fd20 = fcloseall(fd2[0]);
-	//int fd21 = fcloseall(fd2[1]);
-
-	//close (fd2[0]);
-	//close (fd2[1]);
 }
 
 void pipe_out (command a, command b, string& output, bool has_prev, bool has_follow, char** s, int& fd_0, int& fd_1)
@@ -414,16 +432,33 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 	//cout << b.get_call() << endl;
 	if (has_prev)
 	{
-		int fdb2 = open (b.get_arr()[0], O_WRONLY | O_CREAT | O_TRUNC, 006644);
-		if (fdb2 == -1)
+		int fdb2;
+		if (b.get_arr()[0][0] == '>')
 		{
-			perror ("open file");
-			if (b.get_arr()[0] == NULL)
+			fdb2 = open (b.get_arr()[0], O_WRONLY | O_CREAT | O_APPEND, 006644);
+			if (fdb2 == -1)
 			{
-				cout << "missing output file." << endl;
+				perror ("open file");
+				if (b.get_arr()[0] == NULL)
+				{
+					cout << "missing output file." << endl;
+				}
+			}
+		}
+		else
+		{
+			fdb2 = open (b.get_arr()[0], O_WRONLY | O_CREAT | O_TRUNC, 006644);
+			if (fdb2 == -1)
+			{
+				perror ("open file");
+				if (b.get_arr()[0] == NULL)
+				{
+					cout << "missing output file." << endl;
+				}
 			}
 		}
 		
+		read (fd_0,(char*)output.c_str(), BUFSIZ);
 		//cout << "wait" << endl;
 		close (1);
 		dup (fdb2);
@@ -624,7 +659,10 @@ void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1, 
 			close (fd_0);
 			dup2 (SI,0);
 			
-			read (pi[1], (void *)fd_1, BUFSIZ);
+			close (1);
+			dup(fd_1);
+			
+			//read (pi[1], fd_1, BUFSIZ);
 		}
 		else
 		{
