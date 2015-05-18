@@ -1,7 +1,7 @@
 COMPILER = g++
 CFLAGS = -ansi -pedantic -Wall -Werror
 RESULT = ./bin/rshell
-DIRECTORY = ./src/hw0.cpp
+DIRECTORY = ./src/hw2.cpp
 all:
 	mkdir -p ./bin
 	$(COMPILER) $(CFLAGS) $(DIRECTORY) -o $(RESULT)

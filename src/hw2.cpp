@@ -334,7 +334,7 @@ void pipe_in(command a, command b, string& output, bool follow , int fd_0, int f
 
 	if (follow)
 	{
-		cout << "in" << endl;
+		//cout << "in" << endl;
 		//close(0);
 		//dup(fdb);
 		
@@ -362,33 +362,10 @@ void pipe_in(command a, command b, string& output, bool follow , int fd_0, int f
 		}
 
 		close (fd_1);
-		dup2 (fd_1,SO);
-		//--------------------------------
-	/*	int fb = open ( b.get_arr()[0], O_RDONLY);
-		if (fb == -1)
-		{
-			perror ("open file");
-			if (b.get_arr()[0] == NULL)
-			{
-				cout << "missing output file." << endl;
-			} 
-		}
+		dup2 (SO,1);
+		//dup2 (fd_1,SO);
 		
-		char te;	
-		string word;
 
-		ifstream file1;
-		file1.open(b.get_arr()[0]);
-
-		while (fd_1.get(te))
-		{
-			word.push_back(te);
-		}
-	
-		cout << "word"<< word << endl;
-
-		output = word;*/
-		///------------------------------------------
 		string wew;
 
 		int size;
@@ -396,10 +373,10 @@ void pipe_in(command a, command b, string& output, bool follow , int fd_0, int f
 		char c[1];
 		size = read (fd_1, (char*)wew.c_str(), sizeof(c));
 		
-		cout << "wew:" << wew << endl;
+		//cout << "wew:" << wew << endl;
 		while(size>0)
 		{
-			cout << "111" << endl;
+			//cout << "111" << endl;
 			wew.push_back(*c);
 			size = read (fd_1,c ,sizeof(c));			
 		}
@@ -411,7 +388,7 @@ void pipe_in(command a, command b, string& output, bool follow , int fd_0, int f
 	}
 	else
 	{
-		cout << "!in" << endl;
+		//cout << "!in" << endl;
 		close(0);
 		dup(fdb);
 
@@ -463,7 +440,11 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 		close (1);
 		dup (fdb2);
 		
+		close (fd_0);
+
 		cout << output;
+
+		dup2 (fd_0,0);
 
 		close (fdb2);
 		dup2 (SO,1);
@@ -534,7 +515,7 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 			word.push_back(te);
 		}
 	
-		cout << "word"<< word << endl;
+		//cout << "word"<< word << endl;
 
 		output = word;
 		fdb = open ( b.get_arr()[0], O_RDONLY);
@@ -572,7 +553,7 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 }
 
 
-void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1, string& output)
+void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& output)
 {
 	int pi[2];
 	if (-1 == pipe(pi))
@@ -589,8 +570,10 @@ void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1, 
 				{
 
 				close (1);
-				dup (pi[1]);
-				
+				dup (fd[1]);
+			
+				close (fd[0]);
+	
 				if(execute(b.get_arr()) == false)
 				{
 				}
@@ -602,77 +585,109 @@ void pipe_pipe (command a, command b, bool in, bool follow, int fd_0, int fd_1, 
 				wait(0);
 
 				//close (0);
-				//dup(fd_0);
+				dup2(fd[0], 0);
 			
-				close (pi[1]);
-				dup2(SO,1);
+				close (fd[1]);
+				//dup2(SO,1);
 			}
 			//cout << "wow "<<wow << endl;
 		}
 		else
 		{
 			//write (fd_0, (char*)output.c_str(), BUFSIZ);
-			close (0);
-			dup(fd_0);
-			
-			if (execute(b.get_arr())== false)
+			size_t pid1 = fork();
+			if (pid1 == 0)
 			{
+				//close (0);
+				//close(fd[0]);
+				dup2 (fd[0],0);
+				if (execute(b.get_arr())== false)
+				{
+				}
 			}
-			
-			close (fd_0);
-			dup2 (SI,0);
-			cout << "done" << endl;
+			if (pid1 > 0)
+			{
+				wait(0);
+				dup2 (fd[0],0);
+			}
+			//cout << "done" << endl;
 		}
 	}
 	else
 	{
-		close (1);
-		dup(fd_1);
-		
-		if (execute(a.get_arr())==false)
-		{
-		}
-		
-		close (fd_1);
-		dup2(SO,1);
-
 		if (follow)
 		{
-			int pi[2];
+			size_t pid = fork();
+			if (pid == 0)
+				{
+
+				close (1);
+				dup (fd[1]);
+			
+				close (fd[0]);
+	
+				if(execute(b.get_arr()) == false)
+				{
+				}
+			
+				
+				}
+			if (pid > 0)
+			{
+				wait(0);
+
+				//close (0);
+				dup2(fd[0], 0);
+			
+				close (fd[1]);
+				//dup2(SO,1);
+			}	
+			
+			/*int pi[2];
 			if (-1 == pipe(pi))
 			{
 				perror ("pipe");
 			}
 
 			close (0);
-			dup(fd_0);
+			dup(fd[0]);
 
 			close (1);
-			dup(pi[1]);
+			dup(fd[1]);
 
 			if (execute(b.get_arr())==false)
 			{}
 						
-			close (pi[1]);
+			close (fd[1]);
 			dup2 (SO,1.);
 	
-			close (fd_0);
+			close (fd[0]);
 			dup2 (SI,0);
 			
 			close (1);
-			dup(fd_1);
-			
+			dup(fd[1]);
+			*/
 			//read (pi[1], fd_1, BUFSIZ);
 		}
 		else
 		{
+		close (1);
+		dup(fd[1]);
+		
+		if (execute(a.get_arr())==false)
+		{
+		}
+		
+		close (fd[1]);
+		dup2(SO,1);
+
 			close (0);
-			dup (fd_0);
+			dup (fd[0]);
 			
 			if(execute(b.get_arr())==false)
 			{}
 		
-			close (fd_0);
+			close (fd[0]);
 			dup2 (SI,0);
 		}
 
@@ -690,11 +705,7 @@ void run_pipe (command a)
 	//cout << "listsize: " << list.size()<< endl;
 
 
-	int fd[2];
-	if (-1 == pipe2(fd,O_CLOEXEC))
-	{
-		perror ("pipe");
-	}
+	
 	
 	//int file0 = open ()
 	
@@ -702,6 +713,12 @@ void run_pipe (command a)
 
 	for (unsigned int i =0; i < list.size(); i++)
 	{
+		int fd[2];
+	if (-1 == pipe2(fd,O_CLOEXEC))
+	{
+		perror ("pipe");
+	}
+
 		bool for_in = false;
 		if (i != list.size()-1)
 		{
@@ -712,7 +729,7 @@ void run_pipe (command a)
 			}
 		}
 
-		cout << "S: " << list.at(i).get_sperator() << endl;
+		//cout << "S: " << list.at(i).get_sperator() << endl;
 		if (list.at(i).get_sperator() == '<')
 		{
 			pipe_in (list.at(i), list.at(i+1), temp, for_in, fd[0], fd[1]);
@@ -725,15 +742,15 @@ void run_pipe (command a)
 		}
 		else if (list.at(i).get_sperator() == '|')
 		{
-			pipe_pipe (list.at(i), list.at(i+1), has_fd, for_in, fd[0], fd[1], temp);
+			pipe_pipe (list.at(i), list.at(i+1), has_fd, for_in, fd, temp);
 		}
 		else
 		{
 			//last one, do nothing;
 		}
 	}
-	close (fd[0]);
-	close (fd[1]);
+	//close (fd[0]);
+	//close (fd[1]);
 }
 
 
@@ -880,7 +897,7 @@ if (syscalls.size()>0)
 				// check to do pipe or regular excution
 				if ( is_pipe(syscalls.at(i).at(0)) )
 				{
-					cout << "running piping....." <<endl;
+					////cout << "running piping....." <<endl;
 					run_pipe (syscalls.at(i).at(0));
 				}
 				else
