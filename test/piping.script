@@ -1,0 +1,402 @@
+Script started on Sun 17 May 2015 06:44:17 PM PDT
+~
+zxie003@hammer $ ls
+[0m[01;34m2014fall[0m/  [01;34mDocuments[0m/     [01;32mlab2_ex3.cpp[0m*  [01;34mPublic[0m/    [01;34mTemplates[0m/
+[01;34malice[0m/     [01;34mDownloads[0m/     [01;34mMusic[0m/         [01;34mrshell[0m/    [01;34mucr-cs100[0m/
+[01;34mCS10[0m/      [01;32mlab2_ex1.cpp[0m*  new.txt        [01;34mrshell-1[0m/  [01;34mVideos[0m/
+[01;34mDesktop[0m/   [01;32mlab2_ex2.cpp[0m*  [01;34mPictures[0m/      [01;34mrshell-2[0m/  [01;34mWINDOWS[0m/
+[m~
+zxie003@hammer $ cd rshell
+~/rshell
+zxie003@hammer $ make
+mkdir -p ./bin
+g++ -ansi -pedantic -Wall -Werror ./src/hw2.cpp -o ./bin/rshell
+g++ -ansi -pedantic -Wall -Werror ./src/ls.cpp -o ./bin/ls
+~/rshell
+zxie003@hammer $ bin/[Kzxie003@hammer $ bin/[Kzxie003@hammer $ bin/rshell
+zxie003@hammer.cs.ucr.edu:$ls >      ls
+bin  LICENSE  Makefile	piping.script  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls > 1
+zxie003@hammer.cs.ucr.edu:$ls
+1  bin	LICENSE  Makefile  piping.script  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls >    cat 1
+1
+bin
+LICENSE
+Makefile
+piping.script
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$ls  pwd>1
+zxie003@hammer.cs.ucr.edu:$cat 1
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls > 1 && ls
+1  bin	LICENSE  Makefile  piping.script  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls > 1 || pwd
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$cat 1
+1
+bin
+LICENSE
+Makefile
+piping.script
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$cat < 1
+1
+bin
+LICENSE
+Makefile
+piping.script
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$cat  <  1
+1
+bin
+LICENSE
+Makefile
+piping.script
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$ls  pwd>1   > 1
+zxie003@hammer.cs.ucr.edu:$cat < 1
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls < 1
+1  bin	LICENSE  Makefile  piping.script  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls > w pwd
+zxie003@hammer.cs.ucr.edu:$ls
+1  bin	LICENSE  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$cat pwd
+1
+bin
+LICENSE
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$cat <  < pwd
+1
+bin
+LICENSE
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$touch 2
+zxie003@hammer.cs.ucr.edu:$pwd > 2
+zxie003@hammer.cs.ucr.edu:$cat >     t<1
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$cat  <2
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$
+zxie003@hammer.cs.ucr.edu:$
+zxie003@hammer.cs.ucr.edu:$1 > 2
+exec: Permission denied
+zxie003@hammer.cs.ucr.edu:$a > ls      1 > ls
+exec: Permission denied
+zxie003@hammer.cs.ucr.edu:$1 < 2
+exec: Permission denied
+execute: Success
+zxie003@hammer.cs.ucr.edu:$pq <      ps < ls
+  PID TTY          TIME CMD
+ 7399 pts/70   00:00:00 bash
+ 7441 pts/70   00:00:00 rshell
+ 8994 pts/70   00:00:00 rshell
+ 9022 pts/70   00:00:00 ps
+zxie003@hammer.cs.ucr.edu:$1 < ls
+exec: Permission denied
+execute: Success
+zxie003@hammer.cs.ucr.edu:$pwd < 1
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls < 1 < 2
+1  2  bin  LICENSE  ls	Makefile  piping.script  pwd  README.md  src  test
+exec: Permission denied
+execute: Success
+zxie003@hammer.cs.ucr.edu:$ls < 3
+open file: No such file or directory
+1  2  bin  LICENSE  ls	Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls  <1<2
+1  2  bin  LICENSE  ls	Makefile  piping.script  pwd  README.md  src  test
+exec: Permission denied
+execute: Success
+zxie003@hammer.cs.ucr.edu:$ls
+1  2  bin  LICENSE  ls	Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$1|2
+exec: Permission denied
+exec: Permission denied
+zxie003@hammer.cs.ucr.edu:$1 | 2
+exec: Permission denied
+exec: Permission denied
+zxie003@hammer.cs.ucr.edu:$ls | cat
+1
+2
+bin
+LICENSE
+ls
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$ls|cat
+1
+2
+bin
+LICENSE
+ls
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$ls|grep a
+Makefile
+zxie003@hammer.cs.ucr.edu:$ls | grep a
+Makefile
+zxie003@hammer.cs.ucr.edu:$ls | grep Z
+zxie003@hammer.cs.ucr.edu:$ls | pwd | grep a
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls | pwd | grep Z
+zxie003@hammer.cs.ucr.edu:$ls  \ |pwd|grepa  a
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls | ps | pwd
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls|ps|pwd
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls | pwd >4  4
+zxie003@hammer.cs.ucr.edu:$at    ls
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$cat 4
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls|pwd>4
+zxie003@hammer.cs.ucr.edu:$cta    at<4
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls | ls | ls | gr  pwd
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls | ls | ls |grep Z
+zxie003@hammer.cs.ucr.edu:$ls | cat
+1
+2
+4
+bin
+LICENSE
+ls
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$ca  ,s  ls|cat
+1
+2
+4
+bin
+LICENSE
+ls
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$ls | echo
+
+zxie003@hammer.cs.ucr.edu:$ls  |echo
+
+zxie003@hammer.cs.ucr.edu:$ls|pwd|cat
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls | pwd |cat
+/class/classes/zxie003/rshell
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls >
+open file: Bad address
+missing output file.
+ls: write error: Bad file descriptor
+open file: Bad address
+missing output file.
+open file: Bad address
+missing output file.
+zxie003@hammer.cs.ucr.edu:$ls>
+open file: Bad address
+missing output file.
+ls: write error: Bad file descriptor
+open file: Bad address
+missing output file.
+open file: Bad address
+missing output file.
+zxie003@hammer.cs.ucr.edu:$ls <
+open file: Bad address
+missing input file.
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls<
+open file: Bad address
+missing input file.
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls |
+zxie003@hammer.cs.ucr.edu:$ls|
+zxie003@hammer.cs.ucr.edu:$>1
+zxie003@hammer.cs.ucr.edu:$cat 1
+zxie003@hammer.cs.ucr.edu:$ls <
+open file: Bad address
+missing input file.
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$<1
+execute: Success
+zxie003@hammer.cs.ucr.edu:$| ls
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$|ls
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$<
+open file: Bad address
+missing input file.
+execute: Bad file descriptor
+zxie003@hammer.cs.ucr.edu:$>
+open file: Bad address
+missing output file.
+open file: Bad address
+missing output file.
+open file: Bad address
+missing output file.
+zxie003@hammer.cs.ucr.edu:$|
+zxie003@hammer.cs.ucr.edu:$ls
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls < 3
+open file: No such file or directory
+1  2  4  bin  LICENSE  ls  Makefile  piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls > 3
+zxie003@hammer.cs.ucr.edu:$ls
+1  2  3  4  bin  LICENSE  ls  Makefile	piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls < 4
+1  2  3  4  bin  LICENSE  ls  Makefile	piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$ls > 4
+zxie003@hammer.cs.ucr.edu:$cat 4
+1
+2
+3
+4
+bin
+LICENSE
+ls
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$cat 3
+1
+2
+3
+4
+bin
+LICENSE
+ls
+Makefile
+piping.script
+pwd
+README.md
+src
+test
+zxie003@hammer.cs.ucr.edu:$ls | grep a
+Makefile
+zxie003@hammer.cs.ucr.edu:$ls | pwd
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$ls | ps |         ps | grep a
+ 7399 pts/70   00:00:00 bash
+zxie003@hammer.cs.ucr.edu:$ls |    ps | cat
+  PID TTY          TIME CMD
+ 7399 pts/70   00:00:00 bash
+ 7441 pts/70   00:00:00 rshell
+10152 pts/70   00:00:00 rshell
+10166 pts/70   00:00:00 ps
+zxie003@hammer.cs.ucr.edu:$pwd | cat
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:$q   1 | grep          echp o | cat
+
+zxie003@hammer.cs.ucr.edu:$echo cat
+cat
+zxie003@hammer.cs.ucr.edu:$echo cat        echo cat | grep a
+cat
+zxie003@hammer.cs.ucr.edu:$echo cat | grep Z
+zxie003@hammer.cs.ucr.edu:$	ls -a | grep a
+Makefile
+zxie003@hammer.cs.ucr.edu:$ls -a -l | grep a
+total 48
+drwx------  6 zxie003 classes 4096 May 17 18:45 .
+drwx------ 46 zxie003 classes 8192 May 12 03:52 ..
+-rw-------  1 zxie003 classes    0 May 17 18:44 1
+-rw-------  1 zxie003 classes    0 May 17 18:40 2
+-rw-------  1 zxie003 classes   69 May 17 18:45 3
+-rw-------  1 zxie003 classes   69 May 17 18:45 4
+drwx------  2 zxie003 classes 4096 May 17 18:37 bin
+drwx------  8 zxie003 classes 4096 May 17 18:35 .git
+-rw-------  1 zxie003 classes 1456 Apr 18 22:50 LICENSE
+-rw-------  1 zxie003 classes    0 May 17 18:40 ls
+-rw-------  1 zxie003 classes  386 May 17 18:35 Makefile
+-rw-------  1 zxie003 classes    0 May 17 18:37 piping.script
+-rw-------  1 zxie003 classes   60 May 17 18:39 pwd
+-rw-------  1 zxie003 classes 2700 May  4 16:49 README.md
+drwx------  3 zxie003 classes 4096 May 17 18:35 src
+drwx------  2 zxie003 classes 4096 May  4 16:51 test
+zxie003@hammer.cs.ucr.edu:$cat Makefile | gro ep a
+CFLAGS = -ansi -pedantic -Wall -Werror
+all:
+clean:
+zxie003@hammer.cs.ucr.edu:$ls  1   ls
+1  2  3  4  bin  LICENSE  ls  Makefile	piping.script  pwd  README.md  src  test
+zxie003@hammer.cs.ucr.edu:$cat 1 | grep a
+zxie003@hammer.cs.ucr.edu:$cat 1
+zxie003@hammer.cs.ucr.edu:$ls > a
+zxie003@hammer.cs.ucr.edu:$cat a | grep a
+a
+Makefile
+zxie003@hammer.cs.ucr.edu:$g echo teh  he following cases has bug
+the following cases has bug
+zxie003@hammer.cs.ucr.edu:$ls < 1 >2
+^C
+~/rshell
+zxie003@hammer $ bin/rshell[6Pmakebin/rshell
+zxie003@hammer.cs.ucr.edu:$ls | grep a | grep b
+^C
+~/rshell
+zxie003@hammer $ bin/rshell[6Pmakebin/rshell
+zxie003@hammer.cs.ucr.edu:$ls < 1 > 2 | grep a
+^C
+~/rshell
+zxie003@hammer $ bin/rshell
+zxie003@hammer.cs.ucr.edu:$ls > a 2 < 1
+exec: Permission denied
+execute: Success
+zxie003@hammer.cs.ucr.edu:$ls  grepa  a | grep b
+^C
+~/rshell
+zxie003@hammer $ bin/rshell[K[K[K[K[K[K[K[K[K[Kmake
+mkdir -p ./bin
+g++ -ansi -pedantic -Wall -Werror ./src/hw2.cpp -o ./bin/rshell
+g++ -ansi -pedantic -Wall -Werror ./src/ls.cpp -o ./bin/ls
+~/rshell
+zxie003@hammer $ ^C
+~/rshell
+zxie003@hammer $ exit
+exit
+
+Script done on Sun 17 May 2015 07:40:40 PM PDT

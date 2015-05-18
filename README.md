@@ -1,7 +1,7 @@
 # rshell
 
-rshell is a program I wrote that functions alomost the same sa BASH terminal.
-it can run commands, and use seperators such as `;` , `||` ,and `&&`.
+rshell is a program I wrote that functions almost the same as BASH terminal.
+it can run commands, and use sperators such as `;` , `||` ,and `&&`.
 it also take in comments, which is indicated after the sign `#`. everything after `#` in a command line is a comment, and will not execute with the commands.
 
 each command can take in arguments using space to seperate each term.
@@ -77,4 +77,52 @@ Files prints out in the order of :
 	2. hidden files
 	3. capital case files
 	4. lower case files
+
+
+# Piping
+
+Piping is a program I wrote that functions similar to bash i/o redirection.
+It runs commands by using `>`, `<`, and `|`.
+
+the symbol `>` is output redirection. It will put the output of command to the file on the left.
+
+the symbol `<` takes the content of the file on the right, and input it to the command on the left.
+
+the symbol `|` takes the output of the first command, and use it as the input of the next command.
+
+##How to run rshell
+
+```
+	$git clone https://github.com/sandiexie/rshell.git
+	$cd rshell
+	$git checkout hw2
+	$make
+	$bin/rshell
+```
+
+##My program works in the form of below:
+
+	file > file (do nothing) (error to exc "file")
+	exc > file (write to file)
+	file > exc ( do nothing ) (error)
+	exc > exc (create a file named "exc" )
+
+	file < file (error on excing)
+	exc < exc  (open exc2 fail, run exc1)
+	file < exc (error on excing)
+	exc < file (run exc1)
+
+	file | file (try to exc both, fail)
+	exc | exc ( exc2 prints out)
+	file | exc (try to exc1, fail)
+	exc | file ( try to exc2, fail)
+
+	special case:
+	1. inputing many file to a command will only read the first file and print error on the second file.
+
+## Bugs:
+	1. some cases result in not responding terminal, didn't close file descriptots right.
+	2. > output to multiple files does not work.
+	3. chaining pipe together result in printing out content multiple times.
+
 
