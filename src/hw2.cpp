@@ -14,13 +14,14 @@
 #include <sys/sendfile.h>
 using namespace std;
 
-int SO = dup(1);
-int SI = dup(0);
+int SO;
+
+int SI;
 
 void user()
 {
 	char* user_name = getlogin();
-	if (!getlogin())
+	if ( user_name  == NULL)
 	{
 		perror("getlogin");
 	}
@@ -338,31 +339,72 @@ void pipe_in(command a, command b, string& output, bool follow , int fd_0, int f
 		//close(0);
 		//dup(fdb);
 		
-		close (1);
-		dup(fd_1);
+		if ( close (1) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+
+		if ( dup(fd_1) == -1 )
+		{
+			perror ("dup");
+			exit(1);
+		}
 
 		
 		int pid = fork();
+		if (pid == -1)
+		{
+			perror ("fork");
+		}
 		if (pid == 0)
 		{
-			close (0);
-			dup (fd_0);
+			if ( close (0) == -1 )
+			{
+				perror ("close");
+				exit(1);
+			}
+			if ( dup (fd_0) == -1)
+			{
+				perror ("dup");
+				exit(1);
+			}
 
 			if (execute(a.get_arr()) == false )
 			{
-				perror ("execute");
+				//perror ("execute");
 			}
 			
-			close (fd_0);
-			dup2 (SI,0);
+			if ( close (fd_0) == -1 )
+			{
+				perror ("close");
+				exit(1);
+			}
+			if ( dup2 (SI,0) == -1 )
+			{
+				perror ("dup2");
+				exit(1);
+			}
 		}
 		if(pid > 0)
 		{
-			wait(0);	
+			if ( wait(0) ==-1)
+			{
+				perror ("wait");
+			}
 		}
 
-		close (fd_1);
-		dup2 (SO,1);
+		if ( close (fd_1) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+
+		if ( dup2 (SO,1) == -1) 
+		{ 
+			perror("dup2"); 
+		  	exit(1);
+		}
 		//dup2 (fd_1,SO);
 		
 
@@ -372,13 +414,21 @@ void pipe_in(command a, command b, string& output, bool follow , int fd_0, int f
 
 		char c[1];
 		size = read (fd_1, (char*)wew.c_str(), sizeof(c));
-		
+		if (size == -1)
+		{
+			perror ("read");
+		}
+
 		//cout << "wew:" << wew << endl;
 		while(size>0)
 		{
 			//cout << "111" << endl;
 			wew.push_back(*c);
-			size = read (fd_1,c ,sizeof(c));			
+			size = read (fd_1,c ,sizeof(c));
+			if (size == -1)
+			{
+				perror ("read");
+			}
 		}
 		//read (fd_1, output.c_str , )
 		//close (fdb);
@@ -389,16 +439,32 @@ void pipe_in(command a, command b, string& output, bool follow , int fd_0, int f
 	else
 	{
 		//cout << "!in" << endl;
-		close(0);
-		dup(fdb);
+		if ( close(0) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+		if  ( dup(fdb) == -1 )
+		{
+			perror ("dup");
+			exit(1);
+		}
 
 		if (execute(a.get_arr())== false)
 		{
 			perror ("execute");
 		}
 	
-		close (fdb);
-		dup2(SI,0);
+		if ( close (fdb) == -1)
+		{
+			perror ("close");
+			exit(1);
+		}
+		if ( dup2(SI,0) == -1 )
+		{
+			perror ("dup");
+			//exit(1);
+		}
 
 	}
 }
@@ -435,22 +501,50 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 			}
 		}
 		
-		read (fd_0,(char*)output.c_str(), BUFSIZ);
+		if ( read (fd_0,(char*)output.c_str(), BUFSIZ) == -1 )
+		{
+			perror ("read");
+		}
 		//cout << "wait" << endl;
-		close (1);
-		dup (fdb2);
+		if ( close (1) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+		if ( dup (fdb2)== -1)
+		{
+			perror ("dup");
+			exit(1);
+		}
 		
-		close (fd_0);
+		if ( close (fd_0) == -1)
+		{
+			perror ("close");
+			exit(1);
+		}
 
 		cout << output;
 
-		dup2 (fd_0,0);
+		if ( dup2 (fd_0,0) == -1 )
+		{
+			perror ("dup");
+		}
 
-		close (fdb2);
-		dup2 (SO,1);
+		if ( close (fdb2) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+		if ( dup2 (SO,1) == -1 )
+		{
+			perror ("dup");
+		};
 		
 		char buf[BUFSIZ];
-		read (fd_0, buf, BUFSIZ);
+		if ( read (fd_0, buf, BUFSIZ) == -1)
+		{
+			perror ("read");
+		}
 
 		if (has_follow)
 		{
@@ -470,8 +564,16 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 			} 
 		}
 	
-		close(1);
-		dup(fdb);
+		if ( close(1) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+		if ( dup(fdb) == -1)
+		{
+			perror ("dup");
+			exit(1);
+		}
 
 		//cout << "arr: " << a.get_arr()[3] << endl;
 		if (execute(a.get_arr()) == false)
@@ -481,8 +583,16 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 
 		//output = buf;
 		//wait(0);
-		close (fdb);
-		dup2(SO,1);
+		if ( close (fdb) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+
+		if ( dup2(SO,1) == -1 )
+		{
+			perror ("dup");
+		}
 	
 		//fdb = open ( b.get_arr()[0], O_WRONLY | O_CREAT |O_TRUNC, 00664);
 		//if (fdb == -1)
@@ -541,13 +651,28 @@ void pipe_out (command a, command b, string& output, bool has_prev, bool has_fol
 		//string te = qq;
 		cout << "te: " << te << endl;
 */
-		close (1);
-		dup (fd_1);
+		if ( close (1) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+		if ( dup (fd_1) == -1 )
+		{
+			perror ("dup");
+			exit(1);
+		}
 
 		cout << word;
 
-		close (fd_1);
-		dup2 (SO,1);
+		if ( close (fd_1) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+		if ( dup2 (SO,1) == -1)
+		{
+			perror ("dup");
+		}
 	}
 
 }
@@ -569,10 +694,22 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 			if (pid == 0)
 				{
 
-				close (1);
-				dup (fd[1]);
+				if ( close (1)== -1)
+				{
+					perror ("close");
+					exit(1);
+				}
+				if ( dup (fd[1]) == -1)
+				{
+					perror ("dup");
+					exit(1);
+				}
 			
-				close (fd[0]);
+				if ( close (fd[0]) == -1 )
+				{
+					perror ("close");
+					exit(1);
+				}
 	
 				if(execute(b.get_arr()) == false)
 				{
@@ -582,12 +719,22 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 				}
 			if (pid > 0)
 			{
-				wait(0);
+				if ( wait(0) == -1 )
+				{
+					perror ("wait");
+				}
 
 				//close (0);
-				dup2(fd[0], 0);
+				if ( dup2(fd[0], 0) == -1 )
+				{
+					perror ("dup");
+				}
 			
-				close (fd[1]);
+				if ( close (fd[1]) == -1)
+				{
+					perror ("close");
+					exit(1);
+				}
 				//dup2(SO,1);
 			}
 			//cout << "wow "<<wow << endl;
@@ -596,19 +743,32 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 		{
 			//write (fd_0, (char*)output.c_str(), BUFSIZ);
 			size_t pid1 = fork();
+			if (pid1 == -1)
+			{
+				perror("fork");
+			}
 			if (pid1 == 0)
 			{
 				//close (0);
 				//close(fd[0]);
-				dup2 (fd[0],0);
+				if ( dup2 (fd[0],0) == -1)
+				{
+					perror ("dup");
+				}
 				if (execute(b.get_arr())== false)
 				{
 				}
 			}
 			if (pid1 > 0)
 			{
-				wait(0);
-				dup2 (fd[0],0);
+				if ( wait(0) == -1 )
+				{
+					perror ("wait");
+				}
+				if ( dup2 (fd[0],0) == -1)
+				{
+					perror ("dup");
+				}
 			}
 			//cout << "done" << endl;
 		}
@@ -618,13 +778,29 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 		if (follow)
 		{
 			size_t pid = fork();
+			if (pid == -1)
+			{
+				perror ("fork");
+			}
 			if (pid == 0)
 				{
 
-				close (1);
-				dup (fd[1]);
+				if ( close (1) == -1 )
+				{
+					perror ("close");
+					exit(1);
+				}
+				if ( dup (fd[1]) == -1)
+				{
+					perror ("dup");
+					exit(1);
+				}
 			
-				close (fd[0]);
+				if ( close (fd[0]) == -1)
+				{
+					perror ("close");
+					exit(1);
+				}
 	
 				if(execute(b.get_arr()) == false)
 				{
@@ -634,12 +810,22 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 				}
 			if (pid > 0)
 			{
-				wait(0);
+				if ( wait(0) == -1 )
+				{
+					perror ("wait");
+				}
 
 				//close (0);
-				dup2(fd[0], 0);
+				if ( dup2(fd[0], 0) == -1 )
+				{
+					perror ("dup2");
+				}
 			
-				close (fd[1]);
+				if ( close (fd[1]) == -1 )
+				{
+					perror ("close");
+					exit(1);
+				}
 				//dup2(SO,1);
 			}	
 			
@@ -671,24 +857,54 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 		}
 		else
 		{
-		close (1);
-		dup(fd[1]);
+		if ( close (1) == -1)
+		{
+			perror ("close ");
+			exit(1);
+		}
+		if ( dup(fd[1]) == -1 )
+		{
+			perror ("dup");
+			exit(1);
+		}
 		
 		if (execute(a.get_arr())==false)
 		{
 		}
 		
-		close (fd[1]);
-		dup2(SO,1);
+		if ( close (fd[1]) == -1 )
+		{
+			perror ("close");
+			exit(1);
+		}
+		if ( dup2(SO,1) == -1 )
+		{
+			perror ("dup");
+		}
 
-			close (0);
-			dup (fd[0]);
+			if ( close (0) == -1 )
+			{
+				perror ("close");
+				exit(1);
+			}
+			if ( dup (fd[0]) == -1)
+			{
+				perror ("dup");
+				exit(1);
+			}
 			
 			if(execute(b.get_arr())==false)
 			{}
 		
-			close (fd[0]);
-			dup2 (SI,0);
+			if ( close (fd[0]) == -1 )
+			{
+				perror ("close");
+				exit(1);
+			}
+			if ( dup2 (SI,0) == -1 )
+			{
+				perror ("dup");
+			}
 		}
 
 	}
@@ -758,6 +974,20 @@ void run_pipe (command a)
 //////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
+ 
+SO = dup(1);
+if (SO == -1)
+{
+	perror("dup");
+	exit(1);
+}
+
+SI = dup(0);
+if (SI == -1)
+{
+	perror("dup");
+	exit(1);
+}
 while(1)
 {
 	int uid = fork();
@@ -1001,7 +1231,10 @@ if (syscalls.size()>0)
 }
 else if (uid > 0)
 	{
-		wait(0);
+		if ( wait(0) == -1 )
+		{
+			perror ("wait");
+		}
 	}		
 }
 
