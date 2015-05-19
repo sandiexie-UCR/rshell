@@ -86,7 +86,10 @@ void dir_size( bool all, vector<string> a , string currdir)
 	for (i =0 ; i<a.size(); i++)
 	{
 		string path = currdir + '/' + a.at(i);
-		stat(path.c_str(), &sss);
+		if ( stat(path.c_str(), &sss) == -1)
+		{
+			perror ("stat");
+		}
 
 		if ( !(all) && (a.at(i).at(0) == '.'))
 		{
@@ -142,7 +145,10 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 	if (! do_l )
 	{
 		struct winsize tersiz;
-		ioctl (STDOUT_FILENO, TIOCGWINSZ, &tersiz);
+		if ( ioctl (STDOUT_FILENO, TIOCGWINSZ, &tersiz) == -1 )
+		{
+			perror ("ioctl");
+		}
 		
 		//cout <<  "size" << tersiz.ws_col <<endl;
 		unsigned int terminalsize = tersiz.ws_col -3;
@@ -161,7 +167,10 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			
 			string path = dir + '/' + filenames.at(i);
 			struct stat ss;
-			stat(path.c_str(), &ss);
+			if ( stat(path.c_str(), &ss) == -1 )
+			{
+				perror ("stat");
+			}
 			
 			if (current_size + maxsize +3 >  terminalsize )
 			{
@@ -222,7 +231,10 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			path = dir + '/' + filenames.at(i);
 
 			struct stat f1;
-			stat(path.c_str(), &f1);
+			if ( stat(path.c_str(), &f1) == -1 )
+			{
+				perror ("stat");
+			}
 			//cout << "1" << endl;	
 			// access part:
 			if (S_ISDIR(f1.st_mode))
@@ -305,6 +317,10 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			
 
 			group = getgrgid(f1.st_gid);
+			if (group == -1)
+			{
+				perror ("getgrgid");
+			}
 			if (group == NULL)
 			{
 				group_s = group -> gr_name; 
@@ -431,13 +447,16 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 			//cout << path << "<-dirs"<<endl;
 
 			struct stat f2;
-			stat(path.c_str(), &f2);
+			if ( stat(path.c_str(), &f2) == -1 )
+			{
+				perror ("stat");
+			}
 
 			vector<string> innerfiles;
 			DIR *open_innerdir = opendir((char*) path.c_str());
 			if (open_innerdir == NULL)
 			{
-				//perror ("open fail.");
+				perror ("open fail.");
 				//exit(1);
 			}	
 			if(S_ISDIR(f2.st_mode))
@@ -601,7 +620,10 @@ int main (int argc, char * argv[])
 		vector <string> files;
 			
 		DIR *opened_dir = opendir((char* ) directory.at(i).c_str());
-		
+		if (opened_dir == NULL)
+		{
+			perror ("opendir");
+		}
 		//cout << "222" << endl;
 
 		bool do_it = true;
