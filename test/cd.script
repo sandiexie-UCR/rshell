@@ -1,0 +1,117 @@
+Script started on Fri 29 May 2015 09:39:13 PM PDT
+~
+zxie003@hammer $ ls
+[0m[01;34m2014fall[0m/  [01;34mDesktop[0m/    [01;32mlab2_ex1.cpp[0m*  [01;34mMusic[0m/     [01;34mPublic[0m/    [01;34mrshell-2[0m/   [01;34mVideos[0m/
+[01;34malice[0m/     [01;34mDocuments[0m/  [01;32mlab2_ex2.cpp[0m*  new.txt    [01;34mrshell[0m/    [01;34mTemplates[0m/  [01;34mWINDOWS[0m/
+[01;34mCS10[0m/      [01;34mDownloads[0m/  [01;32mlab2_ex3.cpp[0m*  [01;34mPictures[0m/  [01;34mrshell-1[0m/  [01;34mucr-cs100[0m/
+[m~
+zxie003@hammer $ cd rshell
+~/rshell
+zxie003@hammer $ make
+mkdir -p ./bin
+g++ -ansi -pedantic -Wall -Werror ./src/hw3.cpp -o ./bin/rshell
+g++ -ansi -pedantic -Wall -Werror ./src/ls.cpp -o ./bin/ls
+~/rshell
+zxie003@hammer $ bin/rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd -
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ ls
+1  2  3  4  a  bin  LICENSE  ls  Makefile  pwd	README.md  src	test
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd        cd      src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ ls
+1      cd1	  cp.cpp   hw2.cpp  ls.cpp  rm.cpp  test11  test3  test5
+a.out  command.h  hw0.cpp  hw3.cpp  mv.cpp  test1   test2   test4
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd cd1
+zxie003@hammer.cs.ucr.edu:~/rshell/src/cd1$ cd ../..
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd
+zxie003@hammer.cs.ucr.edu:~$ cd -
+/class/classes/zxie003/rshell
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd         cd
+zxie003@hammer.cs.ucr.edu:~$ cd src
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~$ cd rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd gara abe      garbage
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~/rshell/src$        cd        garvage    v bage
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd          garbage
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd  - garbage^[[D     e
+/class/classes/zxie003/rshell/src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd - cd1
+/class/classes/zxie003/rshell/src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd   cd    - gr arbae ge
+/class/classes/zxie003/rshell/src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd    -garbage
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd        -cd1
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd ..
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd -
+/class/classes/zxie003/rshell/src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd ..
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd ..
+zxie003@hammer.cs.ucr.edu:~$ cd rshell/src/cd1
+zxie003@hammer.cs.ucr.edu:~/rshell/src/cd1$ cd . .
+zxie003@hammer.cs.ucr.edu:~/rshell/src/cd1$ cd ../../..
+zxie003@hammer.cs.ucr.edu:~$ ccd   cd nohere
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~$ cd  cd rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd .got  it
+zxie003@hammer.cs.ucr.edu:~/rshell/.git$ cd -
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd         .git
+zxie003@hammer.cs.ucr.edu:~/rshell/.git$ cd -
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$        cd   .git
+zxie003@hammer.cs.ucr.edu:~/rshell/.git$ cd ..
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd src   ../rshell/src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd      cd  ../s ../src   rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd ~
+zxie003@hammer.cs.ucr.edu:~$ cd rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd /homr e/sandie/ 
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd    pwd
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd /class/classes/zxie003/rshell/src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd /class/class                    cd      /class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd    cd   ~
+zxie003@hammer.cs.ucr.edu:~$    cd -
+/class/classes/zxie003/rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ cd  ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ cat
+^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ cat
+^Z
+[1]+  Stopped                 bin/rshell
+~/rshell
+zxie003@hammer $ fg
+bin/rshell
+^C
+zxie003@hammer.cs.ucr.edu:~/rshell$     cd ~
+zxie003@hammer.cs.ucr.edu:~$ ex  cd  cd ../  /rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$    cd    ./src
+zxie003@hammer.cs.ucr.edu:~/rshell/src$ cd cd1
+zxie003@hammer.cs.ucr.edu:~/rshell/src/cd1$ cd ../../../../..
+zxie003@hammer.cs.ucr.edu: /class$ cd classes
+zxie003@hammer.cs.ucr.edu: /class/classes$ cd rshell
+chdir: No such file or directory
+zxie003@hammer.cs.ucr.edu: /class/classes$ ccd  d /class/classes/               zxie003
+zxie003@hammer.cs.ucr.edu:~$ cd rshell
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ ^C
+zxie003@hammer.cs.ucr.edu:~/rshell$ exit
+~/rshell
+zxie003@hammer $ exit
+exit
+
+Script done on Fri 29 May 2015 09:50:54 PM PDT

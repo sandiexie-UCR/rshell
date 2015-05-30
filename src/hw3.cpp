@@ -476,7 +476,7 @@ if (syscalls.size()>0)
 			
 			if ( (string)syscalls.at(i).at(j).get_arr()[0] == "cd")
 			{
-				cout << "doing cd..." << endl;
+				//cout << "doing cd..." << endl;
 				run_cd(syscalls.at(i).at(j));
 			}
 			else if ( j==0 )

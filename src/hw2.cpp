@@ -742,7 +742,7 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 		else
 		{
 			//write (fd_0, (char*)output.c_str(), BUFSIZ);
-			size_t pid1 = fork();
+			int pid1 = fork();
 			if (pid1 == -1)
 			{
 				perror("fork");
@@ -777,7 +777,7 @@ void pipe_pipe (command a, command b, bool in, bool follow, int *fd, string& out
 	{
 		if (follow)
 		{
-			size_t pid = fork();
+			int pid = fork();
 			if (pid == -1)
 			{
 				perror ("fork");
