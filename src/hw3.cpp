@@ -16,7 +16,7 @@ using namespace std;
 void user()
 {
 	char* user_name = getlogin();
-	if (!getlogin())
+	if (user_name == NULL)
 	{
 		perror("getlogin");
 	}
@@ -260,15 +260,28 @@ int main(int argc, char* argv[])
 	//sigemptyset (&act1.sa_mask);
 	//act1.sa_flags = 0;
 
-	sigaction (SIGINT,NULL, &act2);
-	if (act2.sa_handler != SIG_IGN)
+	if ( sigaction (SIGINT,NULL, &act2) == -1)
 	{
-		sigaction (SIGINT,&act1, NULL);
+		perror ("sigaction");
 	}
-	sigaction (SIGTSTP,NULL, &act2);
+	if ( act2.sa_handler != SIG_IGN )
+	{
+		if ( sigaction (SIGINT,&act1, NULL) == -1)
+		{
+			perror ("sigaction");
+		}
+	}
+
+	if ( sigaction (SIGTSTP,NULL, &act2) == -1 )
+	{
+		perror ("sigaction");
+	}
 	if (act2.sa_handler != SIG_IGN)
 	{
-		sigaction (SIGTSTP,&act1, NULL);
+		if ( sigaction (SIGTSTP,&act1, NULL) == -1 )
+		{
+			perror ("sigction");
+		}
 	}
 
 while(1)
