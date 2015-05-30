@@ -10,6 +10,7 @@
 #include "command.h"
 #include <string>
 #include <signal.h>
+#include <errno.h>
 using namespace std;
 
 void user()
@@ -42,9 +43,19 @@ void user()
 	string home_str = home_name;
 	
 	string dir_name_new = dir_name;
+	
+	if (home_str.length() <= dir_name_new.length())
+	{
+		dir_name_new = dir_name_new.substr(home_str.size());
 
-	dir_name_new = dir_name_new.substr(home_str.size());
-	cout << user_name << "@" << name << ":" <<"~"<< dir_name_new <<  "$";
+		cout << user_name << "@" << name << ":" <<"~"<< dir_name_new <<  "$ ";
+	}
+	else
+	{
+		cout << user_name << "@" << name << ": " << dir_name << "$ ";
+	}
+	
+	
 }
 
 bool execute ( char*argu[])
@@ -78,9 +89,12 @@ bool execute ( char*argu[])
 	}
 	if (pid > 0)
 	{
-		pid_t wait = waitpid(pid, &pass, 0);
-		
-		if (wait < 0 )
+		pid_t wait;
+		do
+		{
+			wait = waitpid(pid, &pass, 0);
+		} while (wait ==  -1 && errno == EINTR );
+		if (wait < 0)
 		{
 			perror("wait");
 		}
@@ -111,14 +125,14 @@ void run_cd( command a )
 			//cout << "-" << endl;
 			char* current;
 			current = getenv("PWD");
-			if (current == "\0")
+			if (current == NULL)
 			{
 				perror ("getenv");
 			}
 
 			char* prev;
 			prev = getenv("OLDPWD");
-			if (current == "\0")
+			if (current == NULL)
 			{
 				perror ("getenv");
 			}
@@ -132,19 +146,22 @@ void run_cd( command a )
 		
 			if ( setenv("PWD", prev ,1)  == -1)
 			{	perror ("setenv");	}
+
+			string print = prev;
+			cout << print << endl;
 		}
 		else if ( first == "~")
 		{
 			char* current;
 			current = getenv("PWD");
-			if (current == "\0")
+			if (current == NULL)
 			{
 				perror ("getenv");
 			}
 
 			char* home;
 			home = getenv("HOME");
-			if (current == "\0")
+			if (current == NULL)
 			{	perror ("getenv");	}
 
 			if ( chdir(home) == -1)
@@ -162,7 +179,7 @@ void run_cd( command a )
 		{
 			char* current;
 			current = getenv("PWD");
-			if (current == "\0")
+			if (current == NULL)
 			{
 				perror ("getenv");
 			}
@@ -198,14 +215,14 @@ void run_cd( command a )
 		//cout << "cd" << endl;
 		char* current;
 		current = getenv("PWD");
-		if (current == "\0")
+		if (current == NULL)
 		{
 			perror ("getenv");
 		}
 
 		char* home;
 		home = getenv("HOME");
-		if (current == "\0")
+		if (current == NULL)
 		{	perror ("getenv");	}
 
 		if ( chdir(home) == -1)
@@ -226,7 +243,7 @@ void signal(int signum)
 	if (signum == SIGINT)
 	{
 		// do nothing for Ctrl+C;
-		cout << "wew"<<endl;
+		cout <<endl;
 	}
 	else if (signum == SIGTSTP)
 	{
@@ -256,7 +273,7 @@ int main(int argc, char* argv[])
 
 while(1)
 {
-	cout << "o" << endl;
+	//cout << "o" << endl;
 	cin.clear();
 	user();
 	string input;
@@ -456,7 +473,8 @@ if (syscalls.size()>0)
 		{
 			//cout << j << " <- " <<  *(syscalls.at(i).at(0).get_arr( )) << endl;
 			string cd_w = syscalls.at(i).at(j).get_arr()[0];
-			if (cd_w == "cd")
+			
+			if ( (string)syscalls.at(i).at(j).get_arr()[0] == "cd")
 			{
 				cout << "doing cd..." << endl;
 				run_cd(syscalls.at(i).at(j));

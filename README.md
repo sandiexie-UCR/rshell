@@ -125,4 +125,23 @@ the symbol `|` takes the output of the first command, and use it as the input of
 	2. > output to multiple files does not work.
 	3. chaining pipe together result in printing out content multiple times.
 
+# cd
+
+cd is a program that changes directories.
+
+1. `cd <PATH>` brings to the folder with name `<PATH>`
+
+2. `cd -` brings to the previous folder
+
+3. `cd ~` beings to the home folder
+
+## How to run cd
+
+```
+	$git clone https://github.com/sandiexie/rshell.git
+	$cd rshell
+	$git checkout hw3
+	$make
+	$bin/rshell
+```
 

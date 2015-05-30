@@ -317,7 +317,7 @@ void print_file (bool& do_all, bool& do_l, vector<string> filenames, string dir,
 			
 
 			group = getgrgid(f1.st_gid);
-			if (group == -1)
+			if (group == NULL)
 			{
 				perror ("getgrgid");
 			}
