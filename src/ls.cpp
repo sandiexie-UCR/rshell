@@ -454,11 +454,11 @@ void do_R (bool aaa, bool lll, vector<string> filesforR, string curr_dir, bool f
 
 			vector<string> innerfiles;
 			DIR *open_innerdir = opendir((char*) path.c_str());
-			if (open_innerdir == NULL)
-			{
-				perror ("open fail.");
+			//if (open_innerdir == NULL)
+			//{
+			//	perror ("");
 				//exit(1);
-			}	
+			//}	
 			if(S_ISDIR(f2.st_mode))
 			{
 				//cout <<  path << "this is dirs!!!!!!"<< endl;
